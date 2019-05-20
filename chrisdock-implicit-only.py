@@ -20,6 +20,23 @@ def dirac_eps(x, epsilon=1):
 def hacknrm(x):
     return ((x-x.min())/(x.max()-x.min()))
 
+def quat2mat(quat):
+    # see https://raw.githubusercontent.com/ClementPinard/SfmLearner-Pytorch/master/inverse_warp.py
+    norm_quat = torch.cat([quat[:,:1].detach()*0 + 1, quat], dim=1)
+    norm_quat = norm_quat/norm_quat.norm(p=2, dim=1, keepdim=True)
+    w, x, y, z = norm_quat[:,0], norm_quat[:,1], norm_quat[:,2], norm_quat[:,3]
+
+    B = quat.size(0)
+
+    w2, x2, y2, z2 = w.pow(2), x.pow(2), y.pow(2), z.pow(2)
+    wx, wy, wz = w*x, w*y, w*z
+    xy, xz, yz = x*y, x*z, y*z
+
+    rotMat = torch.stack([w2 + x2 - y2 - z2, 2*xy - 2*wz, 2*wy + 2*xz,
+                          2*wz + 2*xy, w2 - x2 + y2 - z2, 2*yz - 2*wx,
+                          2*xz - 2*wy, 2*wx + 2*yz, w2 - x2 - y2 + z2], dim=1).reshape(B, 3, 3)
+    return rotMat
+
 def visualise(a,b, win='v', normalise=True, sf=1.0, pre_f=lambda x: x, f=lambda x: x):
     # a,b = signed distance functions
     # sf = scale_factor (e.g. 8 = 8x bigger image)
@@ -35,7 +52,6 @@ def circular(iterable):
     combi = list(iterable) + list(iterable)
     for i in range(count):
         yield combi[i:i + count]
-
 
 def sobel_filts(dims, normalised=True):
     # Sobel-Feldman Operator (n dimensional) consists of two operations:
@@ -101,37 +117,6 @@ class Sobel3d(nn.Module):
             out = out.norm(dim=-4)
         return out
 
-
-def grad_mag_3d(x):
-    base = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
-    base = torch.from_numpy(base).float().unsqueeze(0)
-    base = torch.cat((base, torch.zeros(1, 3, 3), -base), dim=0)
-
-    gx_weights = base.permute(0, 1, 2).unsqueeze(0).unsqueeze(0).to(device=device)
-    gy_weights = base.permute(2, 0, 1).unsqueeze(0).unsqueeze(0).to(device=device)
-    gz_weights = base.permute(1, 2, 0).unsqueeze(0).unsqueeze(0).to(device=device)
-
-    gx = torch.nn.functional.conv3d(x, gx_weights, bias=None, stride=1, padding=0, dilation=1) / 8.0
-    gy = torch.nn.functional.conv3d(x, gy_weights, bias=None, stride=1, padding=0, dilation=1) / 8.0
-    gz = torch.nn.functional.conv3d(x, gz_weights, bias=None, stride=1, padding=0, dilation=1) / 8.0
-
-    gm = torch.sqrt(gx**2 + gy**2 + gz**2)
-    return gm
-
-def grad_mag_2d(x):
-    base = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
-    base = torch.from_numpy(base).float()
-
-    gx_weights = base.permute(0, 1).unsqueeze(0).unsqueeze(0).repeat(x.size(1), x.size(1), 1, 1).to(device=device)
-    gy_weights = base.permute(1, 0).unsqueeze(0).unsqueeze(0).repeat(x.size(1), x.size(1), 1, 1).to(device=device)
-
-    # PADDING ERROR!?
-    gx = torch.nn.functional.conv2d(x, gx_weights, bias=None, stride=1) / 8.0
-    gy = torch.nn.functional.conv2d(x, gy_weights, bias=None, stride=1) / 8.0
-
-    gm = torch.sqrt(gx**2 + gy**2)
-    return gm
-
 def gaussian_kernel(sigma, kernel_size, dim):
     if (kernel_size % 2 == 0):
         kernel_size += 1
@@ -170,21 +155,8 @@ sobel = Sobel3d().to(device)
 receptor = np.load("receptor.npy")
 ligand = np.load("good_ligand.npy")
 
-
- # todo: initialise randomly, particle-swarm blah blah
-
-# theta[0,:,3] = 0.5
-
-# grid = torch.nn.functional.affine_grid(theta, phi_2.size())
-
-# tmp1 = torch.nn.functional.grid_sample(phi_1, grid, mode='bilinear', padding_mode='border')
-# vis.image(hacknrm(tmp1[0,0,23]), win='blah2')
-
-
-# learning algorithm
-
 # 0) 
-# precompute sdf of two proteins
+# precompute sdf of two proteins (negative on inside)
 phi_1 = -torch.from_numpy(skfmm.distance(receptor-0.43)).float().to(device).unsqueeze(0).unsqueeze(0)
 phi_2 = -torch.from_numpy(skfmm.distance(ligand-0.43)).float().to(device).unsqueeze(0).unsqueeze(0)
 
@@ -199,41 +171,36 @@ grad_phi_2 = torch.nn.functional.pad(grad_phi_2, pad=(1,1,1,1,1,1), mode='replic
 # precompute integral
 surface_area_2 = dirac(phi_2).sum()
 
-# 1) initialise theta
-theta = torch.eye(3,4).unsqueeze(0).to(device)
-theta_eye = torch.eye(3,4).unsqueeze(0).to(device)
-theta_eye[0,:,-1] = 1
-theta = nn.Parameter(theta)
+# 1) initialise rotate/translate parameterisation
+quat  = nn.Parameter(torch.zeros(1,4).to(device)) # q1..4
+trans = nn.Parameter(torch.zeros(1,3,1).to(device)) # xyz 
+optim = torch.optim.SGD([quat,trans], lr=0.01)
 
-optim = torch.optim.Adam([theta], lr=0.01)
+vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan]]),
+    win='loss', opts=dict(title='loss'))
 
-vis.line(X=np.array([0]), Y=np.array([[np.nan, np.nan, np.nan]]),
-    win='loss', opts=dict(title='loss', legend=['1', '2', '3']))
+def build_matrix():
+    return torch.cat((quat2mat(quat), trans), dim=2)
 
 for step in range(1000):
 
     optim.zero_grad()
 
-    # sample domain
-    grid = torch.nn.functional.affine_grid(theta*theta_eye, phi_2.size())
+    grid = torch.nn.functional.affine_grid(build_matrix(), phi_2.size())
     s_phi_1 = torch.nn.functional.grid_sample(phi_1, grid, mode='bilinear', padding_mode='border')
-    # s_grad_phi_1 = torch.nn.functional.grid_sample(grad_phi_1, grid, mode='bilinear', padding_mode='border')
-
-    mask = dirac(phi_2)
-
-    contact = ((phi_2 - s_phi_1)**2)
+    
+    contact = dirac(torch.min(s_phi_1, phi_2))
     intersection = -heaviside(torch.max(s_phi_1, phi_2), 1)
+    loss = contact.mean() + intersection.mean()
 
-    loss = intersection.mean()
-    # loss = align.mean()
     loss.backward()
     optim.step()
 
-    if step % 50 == 0:
+    if step % 100 == 0:
         # vis.image((intersection   [0,0,21]), win='inter', opts={'title':'intersection'})
         # vis.image((hacknrm(contact)        [0,0,21]), win='conthetatact', opts={'title':'contact'})
         visualise(s_phi_1, phi_2, sf=8, f=dirac)
-        vis.line(X=np.array([step]), Y=np.array([[intersection.mean().item(), intersection.mean().item(), contact.mean().item()]]),
-            win='loss', opts=dict(legend=['intersection', 'contact', 'contact']), update='append')
+        vis.line(X=np.array([step]), Y=np.array([[intersection.mean().item(), contact.mean().item()]]),
+            win='loss', opts=dict(legend=['intersection', 'contact']), update='append')
 
 
