@@ -1,25 +1,33 @@
 import scipy.ndimage.morphology as SNM
 import numpy as np
 import time
-import matplotlib.pyplot as plt
 import skfmm
 import torch
 import torch.nn as nn
 import visdom
 
-vis = visdom.Visdom(port=8613)
+vis = visdom.Visdom(port=12345)
 
 def dirac(x):
     return (1/np.pi)/(1+x**2)
 
-def heaviside(x,epsilon):
+def heaviside(x,epsilon=1):
     return 0.5*(1+(2./np.pi)*torch.atan(x/epsilon))
 
-def dirac_eps(x, epsilon):
+def dirac_eps(x, epsilon=1):
     return (epsilon/np.pi)/(epsilon**2+x**2)
 
 def hacknrm(x):
     return ((x-x.min())/(x.max()-x.min()))
+
+def visualise(a,b, win='v', normalise=True, sf=1.0, pre_f=lambda x: x, f=lambda x: x):
+    # a,b = signed distance functions
+    # sf = scale_factor (e.g. 8 = 8x bigger image)
+    # f  = post_processing function (e.g. heaviside)
+    slice_a = f(torch.nn.functional.interpolate(pre_f(a), scale_factor=sf, mode='trilinear', align_corners=True)[0,0,sf*a.size(2)//2,:,:])
+    slice_b = f(torch.nn.functional.interpolate(pre_f(b), scale_factor=sf, mode='trilinear', align_corners=True)[0,0,sf*b.size(2)//2,:,:])
+    img = torch.cat((slice_a.unsqueeze(0),slice_b.unsqueeze(0),slice_b.unsqueeze(0)), dim=0)
+    vis.image(hacknrm(img) if normalise else img, win=win)
 
 # helper function for sobel orientation generation
 def circular(iterable):
@@ -216,50 +224,16 @@ for step in range(1000):
     contact = ((phi_2 - s_phi_1)**2)
     intersection = -heaviside(torch.max(s_phi_1, phi_2), 1)
 
-    vis.image((intersection   [0,0,21]), win='inter', opts={'title':'intersection'})
-    vis.image((hacknrm(contact)        [0,0,21]), win='conthetatact', opts={'title':'contact'})
-
-    loss = contact.mean() + 0.0001*intersection.mean()
+    loss = intersection.mean()
     # loss = align.mean()
     loss.backward()
     optim.step()
 
-    vis.line(X=np.array([step]), Y=np.array([[intersection.mean().item(), intersection.mean().item(), contact.mean().item()]]),
-        win='loss', opts=dict(legend=['intersection', 'contact', 'contact']), update='append')
+    if step % 50 == 0:
+        # vis.image((intersection   [0,0,21]), win='inter', opts={'title':'intersection'})
+        # vis.image((hacknrm(contact)        [0,0,21]), win='conthetatact', opts={'title':'contact'})
+        visualise(s_phi_1, phi_2, sf=8, f=dirac)
+        vis.line(X=np.array([step]), Y=np.array([[intersection.mean().item(), intersection.mean().item(), contact.mean().item()]]),
+            win='loss', opts=dict(legend=['intersection', 'contact', 'contact']), update='append')
 
-
-
-# rec_data = torch.from_numpy(receptor).to(device).float()
-# d_rec3 = sobel.forward(rec_data)
-# rec_result =  d_rec3.data.cpu().numpy()
-
-# lig_data = torch.from_numpy(ligand).to(device).float()
-# d_lig3 = sobel.forward(lig_data)
-# lig_result =  d_rec3.data.cpu().numpy()
-
-
-
-
-# newSDF_A = torch.nn.grid_sample(sdfA, thetaA)
-
-
-
-# '''
-# fig = plt.figure()
-# ax = fig.add_subplot(1,3,1)
-# plt.imshow(d_rec1[45])
-# plt.colorbar()
-# ax = fig.add_subplot(1,3,2)
-# plt.imshow(d_rec2[45])
-# plt.colorbar()
-# ax = fig.add_subplot(1,3,3)
-# plt.imshow(result[:,45])
-# plt.colorbar()
-# '''
-
-# fig = plt.figure()
-# plt.imshow(rec_result[:,:,45])
-# plt.colorbar()
-
-# plt.show()
 
