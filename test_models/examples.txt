@@ -1,9 +1,0 @@
-In this folder you will find 8 files.
-
-receptor.dx and ligand.dx are the density file representations of our proteins, the atomic structures for which are given by receptor.pdb and ligand.pdb.
-
-These files are all centred on the origin. The density files contain a voxel spacing of 1 angstroem. 
-
-receptor_points.npy and ligand_points.npy are the equivilent point files of the density maps in a numpy format (the top of the dx files contains information on the voxel spacing and size)
-
-receptor_bound.pdb and ligand_bound.pdb represent the atomic structures of the bound form of the overall protein. In other words, these give the arrangement that we want to predict with receptor.pdb and ligand.pdb.
