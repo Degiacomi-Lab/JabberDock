@@ -13,8 +13,8 @@
 # Author : Lucas Rudden, lucas.rudden1@btinternet.com
 
 __author__ = "Lucas S. P. Rudden ($Author: lucas.rudden $)"
-__version__ = '0.3'
-__date__ = '$Date: 2019-02-07 $'
+__version__ = '1.0'
+__date__ = '$Date: 2019-07-03 $'
 
 from JabberDock.methods import *
 from JabberDock.auto_scripts import *

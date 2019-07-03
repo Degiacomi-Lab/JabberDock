@@ -7,6 +7,10 @@ __pycache__/
 *.so
 *.c
 
+# Ignore swap files
+*.swp
+*.swo
+
 # Distribution / packaging
 .Python
 build/

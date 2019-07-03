@@ -33,6 +33,37 @@ class InstallCommand(build_ext):
 
         shutil.rmtree("build")
 
+# Cythonising necessary scripts function
+def cythonise(folder):
+    """
+    Cythonise pyx files 
+
+    :param folder: Location of pyx files
+    """
+
+    home = os.getcwd()
+    os.chdir(folder)
+
+    # small hack to get around a problem in older cython versions, i.e.
+    # an infinite dependencies loop when __init__.py file is in the same folder as pyx
+    if os.path.exists("__init__.py"):
+        os.rename("__init__.py", "tmp")
+
+    setup(
+        include_dirs=[np.get_include()],
+        ext_modules=cythonize(
+            "*.pyx",
+            include_path=[np.get_include()],
+            compiler_directives={'boundscheck': False, 'wraparound': False, 'embedsignature': True}),
+        cmdclass={'install': InstallCommand}
+    )
+
+    # continuation of the small hack
+    os.rename("tmp", "__init__.py")
+
+    os.chdir(home)
+
+
 # Add auto_scripts to path
 home = os.getcwd()
 sys.path.append(os.getcwd())
@@ -44,22 +75,7 @@ for filename in os.listdir(os.getcwd()):
     else:
         continue
 
-os.chdir("../methods")
+os.chdir(home)
 
-# small hack to get around a problem in older cython versions, i.e.
-# an infinite dependencies loop when __init__.py file is in the same folder as pyx
-if os.path.exists("__init__.py"):
-    os.rename("__init__.py", "tmp")
-
-
-setup(
-    include_dirs=[np.get_include()],
-    ext_modules=cythonize(
-        "*.pyx",
-        include_path=[np.get_include()],
-        compiler_directives={'boundscheck': False, 'wraparound': False, 'embedsignature': True}),
-    cmdclass={'install': InstallCommand}
-)
-
-# continuation of the small hack
-os.rename("tmp", "__init__.py")
+# Cythonise files in methods
+cythonise('methods/')

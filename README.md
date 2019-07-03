@@ -36,3 +36,8 @@ JabberDock requires the following software to be installed to run:
 * POWer
 
 Install with: 'python setup.py install'
+
+## Biobox installation ##
+Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
+Please move the biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath
+There is a readme file in the biobox folder containing instructions on requirements and installation instructions.
