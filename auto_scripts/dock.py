@@ -106,9 +106,9 @@ if not restart:
         subprocess.call('mkdir models', shell=True)
 
 if mpi:
-    subprocess.call("mpirun -np %i %s/POW.py input_ensemble > time_log.dat"%(no_proc, pow_loc), shell=True)
+    subprocess.call("mpirun -np %i %s/POW.py input_ensemble | tee time_log.dat"%(no_proc, pow_loc), shell=True)
 else:
-    subprocess.call("%s/POW.py input_ensemble > time_log.dat"%(pow_loc), shell=True)
+    subprocess.call("%s/POW.py input_ensemble | tee time_log.dat"%(pow_loc), shell=True)
 
 logger.info("%i ligand models produced by POW in folder models. The data file with details on roto-translations and scores is held in %s.dat.\nThe results are returned unranked, but each model number relates to the corresponding line in the data file.\nAn additional dipole re-ranking procedure can now be invoked, or you can rank the solutions as is.\nNote that the solutions are geometrically oriented relative to the initial_receptor file (i.e. the starting points were moved to the origin)"%(no_samples, name))
 

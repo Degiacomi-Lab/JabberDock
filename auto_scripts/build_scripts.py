@@ -132,8 +132,11 @@ def nptrun(timestep, no_steps, dump_time, ref_temp, ref_press):
     md_file.close()
     return 0
 
-def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, file_name = 'model_solutions', tcl = True, restart=False):
+def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, axis=1, file_name = 'model_solutions', tcl = True, restart=False, ensemble_module="generate_ensembly.py"):
     
+    # axis refers to limiting the rotational space of protein (needs to be added in docs)
+    # ensemble module is the generate ensemble pow script that someone can edit (needs to be added in docs)
+
     receptor_pdb = receptor + '.pdb'
     ligand_pdb = ligand + '.pdb'
     receptor_dx = receptor + '.dx'
@@ -143,7 +146,7 @@ def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',
         ligand_dip = ligand + '.tcl'
 
     line1 = "optimizer PSO"
-    line2 = "module %s/generate_ensemble.py"%(current_p)
+    line2 = "module %s/%s"%(current_p, ensemble_module)
     line3 = " "
     line4 = "# optimizer parameters"
     line5 = "steps 300"
@@ -154,8 +157,8 @@ def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',
     line10 = "repulsion_factor 0.04"
     line11 = " "
     line12 = "# definition of search space boundary conditions (crd, angle, axis of rotation)"
-    line13 = "boundaryMin -%f -%f -%f -%f -1. -1. -1."%(x, y, z, angle)
-    line14 = "boundaryMax %f %f %f %f 1. 1. 1."%(x, y, z, angle)
+    line13 = "boundaryMin -%f -%f -%f -%f -%f -%f -%f"%(x, y, z, angle, axis, axis, axis)
+    line14 = "boundaryMax %f %f %f %f %f %f %f"%(x, y, z, angle, axis, axis, axis)
     line15 = " "
     line16 = "# name of logfile"
     line17 = "output %s"%(log)

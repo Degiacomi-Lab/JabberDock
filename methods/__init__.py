@@ -16,9 +16,9 @@ __author__ = "Lucas S. P. Rudden ($Author: lucas.rudden $)"
 __version__ = '1.0'
 __date__ = '$Date: 2019-07-03 $'
 
-import geometry
-import jabber
-import dipole
-import data
+from . import geometry
+from . import jabber
+from . import dipole
+from . import data
 from JabberDock.methods.dipole import Dipole
 from JabberDock.methods.jabber import Jabber
