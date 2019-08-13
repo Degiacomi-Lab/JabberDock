@@ -2,11 +2,9 @@
 JabberDock provides a mechanism to dock two protein STID maps together in conjunction with the POW engine
 and BioBox
 
-Note that requires BioBOx as a means to generate the electron density maps, and POW to run the optimisation.
+Note that it requires BioBOx as a means to generate the STID maps, and POW to run the optimisation.
 
 This version of JabberDock ships with a version of biobox intended to allow it to work.
-
-author: Lucas Rudden, l.s.rudden@durham.ac.uk
 
 auto_scripts
 Command line features are provided in the auto_scripts folder.
@@ -41,3 +39,13 @@ Install with: 'python setup.py install'
 Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
 Please move the biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath
 There is a readme file in the biobox folder containing instructions on requirements and installation instructions.
+
+## Usage ##
+
+Please see the manual in the home directory for more details on how to use JabberDock. Please email the author if you have any issues / bugs.
+
+When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
+
+## Contact ##
+
+This is a work in progress, and there are bound to be issues/bugs. Please email the author at l.s.rudden@durham.ac.uk if you have any issues/bugs.

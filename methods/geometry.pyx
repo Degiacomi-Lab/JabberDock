@@ -59,7 +59,7 @@ cpdef fast_argmin_axis_0(np.ndarray a):
     argmin_array[cols] = rows
     return np.asarray(argmin_array, dtype=int)
 
-def translate_pdb(pdb, float x = 0., float y = 0., float z = 0.):
+cpdef translate_pdb(pdb, float x = 0., float y = 0., float z = 0.):
     '''
     translate a whole PDB structure by a given amount in place. Function is defunct relative to biobox.molecule.translate() 
 
@@ -80,7 +80,7 @@ def translate_pdb(pdb, float x = 0., float y = 0., float z = 0.):
     pdb.points[:, 1] += y
     pdb.points[:, 2] += z 
 
-def rotate_pdb(pdb, float angle = 0., float axisx = 0., float axisy = 0., float axisz = 0., R = np.identity(3)):
+cpdef rotate_pdb(pdb, float angle = 0., float axisx = 0., float axisy = 0., float axisz = 0., R = np.identity(3)):
     '''
     Method to rotate pdb structures about an axis of rotation from the origin in place
 
@@ -131,7 +131,7 @@ def rotate_pdb(pdb, float angle = 0., float axisx = 0., float axisy = 0., float 
     # Return the rotation m1= self.data.M.atomselect("*", "*", self.params.atoms)
     return np.asarray(R, dtype=float)
 
-def translate_map(dx, float x = 0., float y = 0., float z = 0.):
+cpdef translate_map(dx, float x = 0., float y = 0., float z = 0.):
     '''
     Method to translate electron density maps based on origin point of grid in place
 
@@ -143,7 +143,7 @@ def translate_map(dx, float x = 0., float y = 0., float z = 0.):
     trans = [x, y, z]
     dx.properties['origin'] = dx.properties['origin'] + trans
 
-def rotate_map(dx, np.ndarray COM = np.array((0., 0., 0.)), float angle = 0., float axisx = 0., float axisy = 0., float axisz =  0., R = np.identity(3)):
+cpdef rotate_map(dx, np.ndarray COM = np.array((0., 0., 0.)), float angle = 0., float axisx = 0., float axisy = 0., float axisz =  0., R = np.identity(3)):
     '''
     Method to rotate electron density maps about the an axis of rotation from the origin in place
 
@@ -201,7 +201,7 @@ def rotate_map(dx, np.ndarray COM = np.array((0., 0., 0.)), float angle = 0., fl
     # Return the rotation matrix
     return np.asarray(R, dtype=float)
 
-def redefine_coord(dx, float cutoff=0.5):
+cpdef redefine_coord(dx, float cutoff=0.5):
     '''
     Define a coordinate system given a cutoff for the isosurface based on the input information of the dx map. The function is also 
     avaliable to rotate / translate maps as necessary, providing a map of points at a spectific isovalue cutoff. 
@@ -232,7 +232,7 @@ def redefine_coord(dx, float cutoff=0.5):
     points = np.array(pts)
     return points
 
-def define_isosurface(dx, np.ndarray COM = np.array((0., 0., 0.)), float cutoff = 0.5, np.ndarray R = np.identity(3)):
+cpdef define_isosurface(dx, np.ndarray COM = np.array((0., 0., 0.)), float cutoff = 0.5, np.ndarray R = np.identity(3)):
     '''
     Obtain an isosurface of a density object that contains the vertices, normals to said vertices,
     faces and the max value of the triangle used to define the isosurface using the marching cubes algorithm. The vertices returned are 3D coordinates.
@@ -260,7 +260,7 @@ def define_isosurface(dx, np.ndarray COM = np.array((0., 0., 0.)), float cutoff 
     newverts = np.matmul(verts, R) + origin # roto-translate our coordinate points as necessary
     return np.asarray(newverts), np.asarray(faces), np.asarray(normals), np.asarray(values)
 
-def get_mol_center(np.ndarray points):
+cpdef get_mol_center(np.ndarray points):
     '''
     Get the geometrix center of a molecular surface, as defined by the vertix coordinates, primarily an internal function
 
@@ -270,7 +270,7 @@ def get_mol_center(np.ndarray points):
 
     return np.mean(points, axis = 0)
 
-def get_center_distance(np.ndarray points):
+cpdef get_center_distance(np.ndarray points):
     '''
     Return the distance (in angstroems) from a set of points from the center of a molecular surface
 
@@ -282,7 +282,7 @@ def get_center_distance(np.ndarray points):
 
     return points - center
 
-def distance_list(points1, points2, float cutoff=1.5):
+cpdef distance_list(points1, points2, float cutoff=1.5):
     '''
     Get a list of indicies for the vertices that are closest to one another, and use a cutoff to remove points that we're not interested in
     (i.e. beyond a typical non-bonded cutoff distance)
@@ -346,7 +346,7 @@ def distance_list(points1, points2, float cutoff=1.5):
     
     return np.array((dist_cutoff1, dist_cutoff2)), np.array((bool_index1, bool_index2)), np.array((min_index1, min_index2))
 
-def get_minmax_crd(fname_rec, fname_times = 2, fname_buff = 0.0):
+cpdef get_minmax_crd(fname_rec, fname_times = 2, fname_buff = 0.0):
     ''' 
     Obtain the min max coordinates from a receptors conformational space to generate sensible structures for ensembles in JabberDock.
     We move the ligand around this space to represent the size the receptor occupies, but we do want it to be slightly bigger.
