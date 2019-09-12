@@ -7,14 +7,14 @@
 
 import numpy as np
 
-def create_pqr_dat(in_file, out_file, template="../biobox/classes/amber14sb.dat"):
+def create_pqr_dat(in_file, out_file, template="../biobox/classes/amber03.dat"):
     """
     Convert an rtp file (e.g. in gromacs top folder) into an appropiate pqr format that can be interpreted by biobox to form the
     STID maps
 
     :param in_file: Name of input rtp file, e.g. aminoacids.rtp in amber03.ff/ folder 
     :param out_file: Name of output file that can be read by the pqr interpreter (import_pqr in biobox.Molecule)
-    :param template: Template of pqr file. We recommend just using the amber14sb.dat shipped with biobox
+    :param template: Template of pqr file. We recommend just using the amber03.dat shipped with biobox
     """
 
     data = []

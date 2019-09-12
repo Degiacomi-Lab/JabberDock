@@ -42,10 +42,10 @@ There is a readme file in the biobox folder containing instructions on requireme
 
 ## Usage ##
 
-Please see the manual in the home directory for more details on how to use JabberDock. Please email the author if you have any issues / bugs.
+Please see the manual in the home directory for more details on how to use JabberDock. Please email the author if you have any questions.
 
 When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
 
 ## Contact ##
 
-This is a work in progress, and there are bound to be issues/bugs. Please email the author at l.s.rudden@durham.ac.uk if you have any issues/bugs.
+This is a work in progress, and there are bound to be issues/bugs. Please email the author at l.s.rudden@durham.ac.uk.

@@ -101,8 +101,8 @@ if not restart:
     if not os.path.isdir('models'):
         subprocess.call('mkdir models', shell=True)
     else:
-        logger.info('> Found a models folder, renaming to models_old_%d_%d_%d'%(now.day,now.month,now.year))
-        subprocess.call('mv models models_old_%d_%d_%d'%(now.day,now.month,now.year), shell=True)
+        logger.info('> Found a models folder, renaming to models_old_%d%d_%d_%d_%d'%(now.hour, now.minute, now.day,now.month,now.year))
+        subprocess.call('mv models models_old_%d%d_%d_%d_%d'%(now.hour, now.minute, now.day,now.month,now.year), shell=True)
         subprocess.call('mkdir models', shell=True)
 
 if mpi:

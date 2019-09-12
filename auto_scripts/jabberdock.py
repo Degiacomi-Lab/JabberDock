@@ -23,8 +23,8 @@ current_p = str(os.path.dirname(os.path.realpath(__file__)))
 
 # Create parameters based on user arguments
 parser = argparse.ArgumentParser(description='Parse input parameters')
-parser.add_argument('-i1', metavar="pdb1", required=True, help='Input PDB file receptor')
-parser.add_argument('-i2', metavar="pdb2", required=True, help='Input PDB file ligand')
+parser.add_argument('-ir', metavar="pdb1", required=True, help='Input PDB file receptor')
+parser.add_argument('-il', metavar="pdb2", required=True, help='Input PDB file ligand')
 parser.add_argument('-ff', metavar="forcefield", default='amber03', required=False, help='Forcefield reference name (default amber03)')
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
 parser.add_argument('-np', metavar="no_proc", default=1, required=False, help="Number of CPUs to run in parallel. If one, runs in serial (Default 1)")
@@ -33,8 +33,8 @@ parser.add_argument('-ntomp', metavar="OpemMP_threads", default=0, required=Fals
 parser.add_argument('-ff_dat', metavar="Forcefield data file (normally in biobox classes)", default='~/biobox/classes/amber03.dat', required=False, help="Location of dat files used to build the charge maps for STID. There are some examples in biobox/classes, which you may well use as your forcefield. The default is amber03.dat in ~/biobox/classes. This will fail if you've installed biobox elsewhere.")
 args = vars(parser.parse_args())
 
-pdb1 = str(args["i1"])
-pdb2 = str(args["i2"])
+pdb1 = str(args["il"])
+pdb2 = str(args["ir"])
 ff = str(args["ff"])
 n_proc = int(args["np"])
 gpu = int(args["gpu"])
