@@ -4,7 +4,8 @@ and BioBox
 
 Note that it requires BioBOx as a means to generate the STID maps, and POW to run the optimisation.
 
-This version of JabberDock ships with a version of biobox intended to allow it to work.
+This version of JabberDock ships with a version of BioBOx intended to allow it to work.
+See below for a brief introduction to installation / where to find POW
 
 auto_scripts
 Command line features are provided in the auto_scripts folder.
@@ -33,19 +34,29 @@ JabberDock requires the following software to be installed to run:
 * VMD 1.9.x
 * POWer
 
-Install with: 'python setup.py install'
+POWer is available at:
+https://www.epfl.ch/labs/lbm/resources/
+
+Install JabberDock with: 'python setup.py install'
+
+After downloading from github, this JabberDock folder might be called JabberDock-master. Ensure it's called JabberDock for the imports to work:
+mv JabberDock-master JabberDock
+
+Please read the full installation instructions in the manual.
 
 ## Biobox installation ##
 Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
 Please move the biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath
 There is a readme file in the biobox folder containing instructions on requirements and installation instructions.
 
+This is an unpubished PDB manipulation module, and therefore is unavaliable elsewhere. We are aiming to publish the full module at some point in the future.
+
 ## Usage ##
 
-Please see the manual in the home directory for more details on how to use JabberDock. Please email the author if you have any questions.
+Please see the manual in the home directory for more details on how to use JabberDock. Email the author if you have any questions.
 
 When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
 
 ## Contact ##
 
-This is a work in progress, and there are bound to be issues/bugs. Please email the author at l.s.rudden@durham.ac.uk.
+This is a work in progress, and there are bound to be bugs. If you have any issues, please email the author at l.s.rudden@durham.ac.uk.
