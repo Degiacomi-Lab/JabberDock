@@ -5,7 +5,7 @@ and BioBox
 Note that it requires BioBOx as a means to generate the STID maps, and POW to run the optimisation.
 
 This version of JabberDock ships with a version of BioBOx intended to allow it to work.
-See below for a brief introduction to installation / where to find POW
+See below for a brief introduction to installation / where to find POW.
 
 auto_scripts
 Command line features are provided in the auto_scripts folder.
@@ -34,8 +34,7 @@ JabberDock requires the following software to be installed to run:
 * VMD 1.9.x
 * POWer
 
-POWer is available at:
-https://www.epfl.ch/labs/lbm/resources/
+Both biobox and POWer are available with this module.
 
 Install JabberDock with: 'python setup.py install'
 
@@ -50,6 +49,14 @@ Please move the biobox folder into whatever directory you like (e.g. your home),
 There is a readme file in the biobox folder containing instructions on requirements and installation instructions.
 
 This is an unpubished PDB manipulation module, and therefore is unavaliable elsewhere. We are aiming to publish the full module at some point in the future.
+
+## POW installation ##
+The original version of POW can be found on the EPFL website:
+https://www.epfl.ch/labs/lbm/resources/
+
+However this is an outdated version, the current version of JabberDock requires the updated version of POW (POW_v2) shipped with JabberDock.
+
+To install, simply move the POW_v2 folder into your home (or other) directory - where JabberDock and biobox should now be located.
 
 ## Usage ##
 

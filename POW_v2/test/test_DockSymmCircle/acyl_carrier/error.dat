@@ -1,0 +1,10 @@
+WARNING: input x0 should be a list or 1-D array, trying to flatten (8, 4)-array
+Traceback (most recent call last):
+  File "../acyl_carrier/../../../POW.py", line 160, in <module>
+    search.launch(params,space,fitness)
+  File "/home/nearco/matteod/workspace/devel/POW_v2/optimizers/CMAVIE.py", line 4267, in launch
+    self.optimizer = CMAEvolutionStrategy(last, 0.05, {"tolx":1e-3}) 
+  File "/home/nearco/matteod/workspace/devel/POW_v2/optimizers/CMAVIE.py", line 1163, in __init__
+    raise _Error('x0 must be 1-D array')
+NameError: global name '_Error' is not defined
+

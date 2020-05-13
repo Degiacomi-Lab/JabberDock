@@ -132,7 +132,7 @@ def nptrun(timestep, no_steps, dump_time, ref_temp, ref_press):
     md_file.close()
     return 0
 
-def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, axis=1, file_name = 'model_solutions', tcl = True, restart=False, ensemble_module="generate_ensembly.py"):
+def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, axis=1, file_name = 'model_solutions', tcl = True, restart=False, ensemble_module="generate_ensemble.py"):
     
     # axis refers to limiting the rotational space of protein (needs to be added in docs)
     # ensemble module is the generate ensemble pow script that someone can edit (needs to be added in docs)

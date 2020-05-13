@@ -1,0 +1,72 @@
+#######################
+# OPTIMIZATION TYPE   #
+#######################
+
+#optimizer DE_epsilon
+#optimizer PSO
+optimizer CMAVIE
+
+module DockSymmCircle
+
+#######################
+# OPT. KEYWORDS       #
+#######################
+
+#for CMAVIE
+continuousRestarts on
+constrained_opt on
+#maxFevals 1000
+
+
+#######################
+# DENSITY DOCK PARAM  #
+#######################
+
+density_map_docking off
+map_resolution 15
+map_docking_weight 20
+density_map ref.sit
+
+#######################
+# FORCE FIELDS   #
+#######################
+
+AllAtom off
+prmFile par_all27_prot_lipid.prm
+topFile top_all27_prot_lipid.rtf
+CoarseGrain off
+cg_file martinize.py
+
+#######################
+# Boundary conditions  #
+#######################
+
+boundaryMin 0 0 0 -2
+boundaryMax 360 360 360 2
+
+####################
+# Target	   #
+####################
+
+degree 3
+target 60 47 9 10
+targetLow 58 45 7 8
+targetHigh 62 49 11 12
+constraint constraint.py
+
+##################
+# Postprocessing #
+##################
+
+filter_threshold -30
+cluster_threshold 1
+
+####################
+# Other keywords #
+####################
+
+output log.txt
+monomer 1fth_chainA.pdb
+
+oriPDB 1fth.pdb
+directRMSDcomp off

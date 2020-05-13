@@ -1,0 +1,46 @@
+optimizer PSO.py
+module Function.py
+
+#######################
+# Calculation Protocol#
+#######################
+
+steps 1000
+particles 60
+repeat 1
+
+###########################
+# Neighborhood (optional) #
+###########################
+
+neighborSize 1
+neighborType indexed
+
+############################
+# PSO behaviour (optional) #
+############################
+
+inertiaMax 0.9
+inertiaMin 0.4
+cp 1.2
+cn 1.4
+#kick and reseed threshold. Set to a number greater than 0 for hard problems!
+kar_threshold 0.0
+##keywords below activate repulsion from explored areas (propagated through repeats)
+#repulsion on
+#repulsion_factor 0.01
+
+########################
+# Boundary conditions  #
+########################
+
+boundaryMin -5.12 -5.12 -5.12 -5.12 -5.12
+boundaryMax 5.12 5.12 5.12 5.12 5.12
+
+##################
+# Other keywords #
+##################
+
+fitnessFile fitness.py
+output log.txt
+filter_threshold 0.00001

@@ -1,0 +1,5 @@
+test folder contains example runs for POW modules.
+In every folder, POW input files are called "input"
+Every example is executed as:
+
+POW modulename input

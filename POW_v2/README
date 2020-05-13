@@ -1,0 +1,82 @@
+# Copyright (c) 2012 EPFL (Ecole Polytechnique federale de Lausanne)
+# Laboratory for Biomolecular Modeling, School of Life Sciences
+#
+# POW is free software ;
+# you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation ;
+# either version 2 of the License, or (at your option) any later version.
+# POW is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY ;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with POW ;
+# if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+#
+# Author : Matteo Degiacomi, matteothomas.degiacomi@epfl.ch
+# Web site : http://lbm.epfl.ch/resources
+
+
+---------------------------------------------
+--- Parallel Optimization Workbench (POW) ---
+---------------------------------------------
+
+Requirements
+------------
+
+The following python (>=2.5) packages are required:
+
+- numpy
+- scipy
+- MDAnalysis (for flexible docking modules)
+- mpi4py
+
+mpi4py will also require the installation of OpenMPI
+
+
+How to Launch
+-------------
+
+mpiexec -n 4 POW.py input.dat
+
+where "input.dat" is your setup file
+
+
+Available modules
+-----------------
+
+- DockDimer:       dock two proteins in a heterodimer, given experimental constraints
+- DockSymmCircle : rigid/flexible assembly of n monomers according to a circular symmetry
+                   and geometric constraints, possibly in the presence of a substrate
+- Function:        generic function optimization
+
+
+Other files
+-----------
+
+- Assembly.py :   data structure for heterodimers
+- Default.py :    classes common to any POW implementation
+- flexibility.py: functions for Principal Components Analysis
+- Multimer.py:    data structure for homo multimers 
+- parse.py:       performs just the postprocessing, without running PSO. Usage goes as follow:
+                  ./parse.py module input_file [logfile]
+- POW.py:         main executable
+- Protein.py:     data structure for a single monomer (PDB parser)
+- PSO.py:         parallel implementation of Particle Swarm Optimization
+
+
+Known Bugs
+----------
+
+- with some versions of MDAnalysis, trajectory alignement may crash.
+  For this reason. when performing a flexible assembly with DockSymmCircle,
+  the provided trajectory should be already aligned,
+
+
+Ongoing Improvements
+--------------------
+
+- The following modules are being developed
+  . Charge: optimize points distribution to match a given electric field
+  . DockDimerCG: dock two proteins using a CG potential
+  . DockLigand: dock a ligand in a protein active site
+  . MatchProtLigand: parameterize protein-ligand interactions for a hybrid AA-CG model
+
+- In DockSymmCircle, flexibility computed after NMA on a single snapshot
