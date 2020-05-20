@@ -24,6 +24,8 @@ import numpy as np
 from Default import Parser
 
 from mpi4py import MPI
+import dill
+MPI.pickle.__init__(dill.dumps, dill.loads)
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
@@ -78,21 +80,25 @@ if len(p)>0:
     sys.path.append(p)
 
 #preprocessing performed only by master node
-if rank == 0:
+#now necessary to be preprocessed by all due to pickling errors
+#all prints by rank = 0
+if rank > -1:
 
-    #init timer
-    start=time.time()
+    if rank == 0:
+        #init timer
+        start=time.time()
+        print('\n> PREPROCESSING\n')
+        print(">> loading module %s..."%mod.split('.')[0])
 
-    print('\n> PREPROCESSING\n')
-
-    print(">> loading module %s..."%mod.split('.')[0])
     exec('import %s as mode'%(mod.split('.')[0]))
   
     #prepare input file parser 
     params=mode.Parser() 
     params.add_standard() 
 
-    print(">> loading optimizer %s..."%optm)
+    if rank == 0:
+        print(">> loading optimizer %s..."%optm)
+
     exec('from %s import %s as Optimizer'%(optm.split('.')[0],optm.split('.')[0]))
     search=Optimizer()
 
@@ -101,7 +107,8 @@ if rank == 0:
         params=search.add_keywords(params)
 
     #parser is ready, read input file and check values consistency
-    print('>> parsing input file...')
+    if rank == 0:
+        print('>> parsing input file...')
     params.set_default_values()
 
     params.parse(infile) 
@@ -109,15 +116,20 @@ if rank == 0:
     params.check_variables() 
 
     #load requested data structures
-    print('>> importing data...')
+    if rank == 0:
+        print('>> importing data...')
     data=mode.Data(params)
    
     #build search space
-    print(">> generating search space...")
+    if rank == 0:
+        print(">> generating search space...")
+
     space=mode.Space(params,data)
-    print(">> "+str(len(space.low))+"D space generated (min_pos, max_pos):")
-    for i in range(0,len(space.low),1):
-        print("   %s, %s"%(space.low[i],space.high[i]))
+
+    if rank == 0:
+        print(">> "+str(len(space.low))+"D space generated (min_pos, max_pos):")
+        for i in range(0,len(space.low),1):
+            print("   %s, %s"%(space.low[i],space.high[i]))
 
     #charge module fitness function or the one requested by user
     if params.fit=="NA":
@@ -146,11 +158,11 @@ else:
 
 #propagate parameters, data, space, optimizer and fitness function to slaves
 comm.Barrier()
-params=comm.bcast(params,root=0)
-space=comm.bcast(space,root=0)
-fitness=comm.bcast(fitness,root=0)
-data=comm.bcast(data,root=0)
-search=comm.bcast(search,root=0)
+#params=comm.bcast(params,root=0)
+#space=comm.bcast(space,root=0)
+#fitness=comm.bcast(fitness,root=0)
+#data=comm.bcast(data,root=0)
+#search=comm.bcast(search,root=0)
 comm.Barrier()
 
 #init optimization timer and launch optimization
