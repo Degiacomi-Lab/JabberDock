@@ -23,7 +23,10 @@ parser.add_argument('-p', metavar="press", default=1.0, required=False, help='Pr
 parser.add_argument('-vox', metavar="vox_in_window", default=3., required=False, help='Number of voxels to include from the surrounding space into the central voxel (default is 3)')
 parser.add_argument('-w', metavar="width", default=1., required=False, help='Width of a voxel (default is 1 Ang., units in ang.)')
 parser.add_argument('-dm', metavar="dip_map", default=1, required=False, help='Whether you want the dipole map printing too (required for postprocessing - default is true). It needs an input of either 0 or 1 (false or true)')
+parser.add_argument('-ac', metavar="ac", default=1, required=False, help='You are converting from an amber forcefield. Needs 0 or 1 - False or True (Default = True)')
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
+parser.add_argument('-eps', metavar="eps_ext", default=54., required=False, help='External Dielectric used in the calculation of the internal, default is 54.')
+
 args = vars(parser.parse_args())
 
 pdb = str(args["i"])
@@ -36,6 +39,8 @@ press = float(args["p"]) * 1e+5 # convert to Pa
 vox = float(args["vox"])
 width = float(args["w"])
 dm = int(args["dm"])
+eps_ext = float(args["eps"])
+ac = int(args["ac"]) 
 
 if outname == 'map':
     protein = pdb.split('.')[0]
@@ -80,7 +85,10 @@ M.import_pdb(pdb)
 window_size = vox * width # resolution, in angstroms
 crds = M.coordinates[time_start:time_end, :]
 
-M_pqr = M.pdb2pqr(ff=ff)
+if ac == 1:
+    M_pqr = M.pdb2pqr(ff=ff)
+else:
+    M_pqr = M.pdb2pqr(ff=ff, amber_convert=ac)
 
 M.assign_atomtype()
 mass = M.get_mass_by_atom()
@@ -108,7 +116,7 @@ x_range = np.arange(buffmaxmin[0], buffmaxmin[1]+width-window_size, width)
 y_range = np.arange(buffmaxmin[2], buffmaxmin[3]+width-window_size, width)  
 z_range = np.arange(buffmaxmin[4], buffmaxmin[5]+width-window_size, width)
 
-spec_vol = window_size**3 * 10**(-30) # Convert Ang^3 to metres^3
+spec_vol = window_size**3 * 10**(-27) # -27 for docking # Convert nm^3 to metres^3
 orig = np.array([x_range, y_range, z_range]) + window_size / 2.
 a = np.array((len(x_range), len(y_range), len(z_range)))
 min_crds = np.ndarray.tolist(np.asarray((buffmaxmin[0] + buff[0], buffmaxmin[2] + buff[1], buffmaxmin[4] + buff[2])) + window_size / 2)
@@ -119,7 +127,7 @@ dipoles  = M.get_dipole_map(orig = orig, pqr = M_pqr, time_start = time_start, t
 
 # Build the STID map
 logger.info("> Dipole map written, building the STID map...")
-M.get_dipole_density(dipole_map = dipoles, orig = orig, min_val = min_crds, vox_in_window = vox, V = spec_vol, outname = outname + ".dx", T = temp, P = press, resolution = width, epsilonE=54)
+M.get_dipole_density(dipole_map = dipoles, orig = orig, min_val = min_crds, vox_in_window = vox, V = spec_vol, outname = outname + ".dx", T = temp, P = press, resolution = width, epsilonE=eps_ext)
 
 logger.info("> Creating a single PDB structure centered in your maps")
 

@@ -58,6 +58,11 @@ However this is an outdated version, the current version of JabberDock requires 
 
 To install, simply move the POW_v2 folder into your home (or other) directory - where JabberDock and biobox should now be located.
 
+You will also need to install dill. To do this, type:
+pip install dill
+On your command line. For the mpi4py installation, we would recommend mpi4py 3.0.0:
+pip install mpi4py==3.0.0
+
 ## Usage ##
 
 Please see the manual in the home directory for more details on how to use JabberDock. Email the author if you have any questions.
