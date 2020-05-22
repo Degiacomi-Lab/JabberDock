@@ -173,17 +173,19 @@ search.launch(params,space,fitness)
 comm.Barrier()
 
 #launch postprocessing
-if rank==0:
-    end2=time.time()
-    one_step=end2-start2
-    print((">> optimization time (sec): {t:<8.3f}".format(t=one_step)))
+if rank > -1:
 
-    print('\n> POSTPROCESSING...')
+    if rank == 0:
+        end2=time.time()
+        one_step=end2-start2
+        print((">> optimization time (sec): {t:<8.3f}".format(t=one_step)))
+        print('\n> POSTPROCESSING...')
+
     post=mode.Postprocess(data,params)
     
 comm.Barrier()
-post=comm.bcast( post,root=0)
-comm.Barrier()
+#post=comm.bcast( post,root=0)
+#comm.Barrier()
     
 post.run()
 
