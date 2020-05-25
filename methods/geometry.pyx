@@ -181,20 +181,19 @@ cpdef rotate_map(dx, np.ndarray COM = np.array((0., 0., 0.)), float angle = 0., 
 
     # Now we need to shift the entire box so that the centre of the box is at the origin of the system, and we can
     # apply our rotation matrix to the origin
-
     dx_center = dx.properties['origin']
     delta = dx.properties['delta']
 
     # Move origin to coordinate with input PDB Centre of Mass
-    dx = translate_map(dx, -COM[0], -COM[1], -COM[2])
-    
+    translate_map(dx, -COM[0], -COM[1], -COM[2])
     rot = np.matmul(delta, R)
+
     dx.properties['delta'] = rot
-    
     new_origin = dx.properties['origin']
+
     origin_rot = np.matmul(new_origin, R)
     dx.properties['origin'] = origin_rot
-    
+
     # Reshift the origin back to its origional position
     dx = translate_map(dx, COM[0], COM[1], COM[2])   
  
