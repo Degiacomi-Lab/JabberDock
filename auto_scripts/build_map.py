@@ -42,6 +42,12 @@ dm = int(args["dm"])
 eps_ext = float(args["eps"])
 ac = int(args["ac"]) 
 
+# log initial command
+cmd_output_string = sys.argv
+cmd_output = ""
+for i in range(len(cmd_output_string)):
+    cmd_output = cmd_output + cmd_output_string[i] + " "
+
 if outname == 'map':
     protein = pdb.split('.')[0]
     outname = protein + '_' + 'map'
@@ -61,6 +67,8 @@ if not args["v"]:
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
+
+logger.info(cmd_output)
 
 if dm < 0 or dm > 1:
     raise Exception("ERROR: Use a 1 or a 0 to indicate if you want a dipole map or not")
@@ -88,7 +96,7 @@ crds = M.coordinates[time_start:time_end, :]
 if ac == 1:
     M_pqr = M.pdb2pqr(ff=ff)
 else:
-    M_pqr = M.pdb2pqr(ff=ff, amber_convert=ac)
+    M_pqr = M.pdb2pqr(ff=ff, amber_convert=False)
 
 M.assign_atomtype()
 mass = M.get_mass_by_atom()
@@ -131,6 +139,6 @@ M.get_dipole_density(dipole_map = dipoles, orig = orig, min_val = min_crds, vox_
 
 logger.info("> Creating a single PDB structure centered in your maps")
 
-M.write_pdb(outname + '.pdb', conformations=[-1])
+M.write_pdb(outname + '.pdb', conformations=[int((time_start+time_end)/2)])
 
 logger.info("> STID map building complete. Check %s.pdb, %s.dx and %s.tcl for output"%(outname, outname, outname))

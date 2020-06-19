@@ -91,6 +91,14 @@ if not args["v"]:
 else:
     logger.setLevel(logging.INFO)
 
+# log initial command
+cmd_output_string = sys.argv
+cmd_output = ""
+for i in range(len(cmd_output_string)):
+    cmd_output = cmd_output + cmd_output_string[i] + " "
+
+logger.info(cmd_output)
+
 logger.info("> Initiating MD setup...")
 
 # Verbose or not?

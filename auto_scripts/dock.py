@@ -30,7 +30,7 @@ parser.add_argument('-d', metavar='dist', required=False, default=1.6, help="Dis
 parser.add_argument('-l', metavar='logfile', required=False, default='pow_log.dat', help="Name of log file to keep POW information")
 parser.add_argument('-ns', metavar='no_samples', required=False, default=300, help="Number of docked predicted results you want to be returned")
 parser.add_argument('-b', metavar='buffer', required=False, default = 0., help="Buffer region to use when exploring the cartisian conformational space around the receptor (default is 0. ang.)")
-parser.add_argument('-m', metavar='space_multiplier', required=False, default= 1.5, help="Multiplier to searching the conformational space. So the default of 2 means twice the size of the receptor is allowed to be explored by the ligand.")
+parser.add_argument('-m', metavar='space_multiplier', required=False, default= 1.5, help="Multiplier to searching the conformational space. So the default of 1.5 means 1.5 the size of the receptor is allowed to be explored by the ligand.")
 parser.add_argument('-a', metavar='angle', required=False, default = 180., help="Angle to twist molecule around (default / recommended unless you want to restrict the exploration space, 180 deg.)")
 parser.add_argument('-n', metavar='name', required=False, default='model_solutions', help="filename for the .dat file with the roto-translations and scores at the end (default is model_solutions)")
 parser.add_argument('-r', metavar='restart', required=False, default=0, help="If this is a restart run (i.e. you're continuing from a point in the docking simulation). The default is 0 (i.e. False). If you are continuing, set -r 1")
@@ -85,6 +85,14 @@ if not args["v"]:
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
+
+# log initial command
+cmd_output_string = sys.argv
+cmd_output = ""
+for i in range(len(cmd_output_string)):
+    cmd_output = cmd_output + cmd_output_string[i] + " "
+
+logger.info(cmd_output)
 
 logger.info("> Setting up input script and defining boundary conditions...")
 boundary = jd.geometry.get_minmax_crd(receptor + '.pdb', fname_times = times, fname_buff = buff)

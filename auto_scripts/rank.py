@@ -47,6 +47,14 @@ if not args["v"]:
 else:
     logger.setLevel(logging.INFO)
 
+# log initial command
+cmd_output_string = sys.argv
+cmd_output = ""
+for i in range(len(cmd_output_string)):
+    cmd_output = cmd_output + cmd_output_string[i] + " "
+
+logger.info(cmd_output)
+
 logger.info("> Loading in %s"%(in_file))
 data = np.loadtxt(in_file)
 
@@ -81,6 +89,7 @@ def rank_scores(data, index):
 
     # Reorder data based on ranks
     ranked_data = np.asarray([x for _, x in sorted(zip(rank, list_data))])
+
     return ranked_data
 
 
@@ -97,5 +106,9 @@ else:
     raise Exception("ERROR: File is not dipole re-ranked or dock output file. It has %i columns when it should have 1 or 9"%(dat_shape))
 
 logger.info("> Ranking complete, outputting ranked data to %s. The numbers in the last column indicate the corresponding model numbers in the dx and pdb files output by dock."%(out_file))
-np.savetxt(out_file, ranked_data)
 
+f = open(out_file, "w")
+for line in ranked_data:
+    f.write("%.5f  %i\n"%(line[0], int(line[1])))
+
+f.close()
