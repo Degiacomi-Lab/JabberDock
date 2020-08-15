@@ -31,7 +31,7 @@ parser.add_argument('-dt', metavar="dumptime", default=2500, required=False, hel
 parser.add_argument('-t', metavar="temp", default=310.15, required=False, help='Temperate of simulation (default 310.15K)')
 parser.add_argument('-p', metavar="press", default=1.0, required=False, help='Pressure of simulation (default 1 bar)')
 parser.add_argument('-s', metavar="skip", default=1, required=False, help='How many frames to skip during parsing (default None)')
-parser.add_argument('-np', metavar="no_proc", default=1, required=False, help="Number of CPUs to run in parallel. If one, runs in serial (Default 1)")
+parser.add_argument('-np', metavar="no_proc", default=1, required=False, help="Number of CPUs to run in parallel. If set to 1 or not specified, use GROMACS default behavior (default is 1)")
 parser.add_argument('-gpu', metavar="gpu", default=-1, required=False, help="GPU ID to map to. 0000 (i.e. first registered one) is the default. But if not specified, then it is assumed you're not using a gpu")
 parser.add_argument('-minim', metavar="min_script", default=current_p + "/minim.mdp", required=False, help="Path to minimisation script, default is the minim script in the auto_scripts folder")
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
