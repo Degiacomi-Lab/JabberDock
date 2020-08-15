@@ -82,8 +82,8 @@ logger.info("> Beginning gromacs run...")
 recep_name = pdb1.split('.')[0]
 lig_name = pdb2.split('.')[0]
 
-subprocess.call('python %s/gmx_run.py -i %s -ff %s -np %i -gpu %i -ntomp %i'%(current_p, pdb1, ff, n_proc, gpu, ntomp), shell=True)
-subprocess.call('python %s/gmx_run.py -i %s -ff %s -np %i -gpu %i -ntomp %i'%(current_p, pdb2, ff, n_proc, gpu, ntomp), shell=True)
+subprocess.call('python %s/gmx_run.py -i %s -ff %s -gpu %i'%(current_p, pdb1, ff, gpu), shell=True)
+subprocess.call('python %s/gmx_run.py -i %s -ff %s -gpu %i'%(current_p, pdb2, ff, gpu), shell=True)
 
 logger.info("> Converting MD output to STID maps...")
 
