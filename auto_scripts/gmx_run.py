@@ -116,7 +116,7 @@ neu_charge = int(subprocess.check_output(current_p + "/neutralise.sh", shell=Tru
 # Solvate and neutralise
 subprocess.call("%s %s editconf -f filename.gro -o filename_proc.gro -c -d 1.0 -bt cubic"%(gmx_cmd, quiet), shell=True)
 subprocess.call("%s %s solvate -cp filename_proc.gro -cs spc216.gro -o filename_solv.gro -p topol.top"%(gmx_cmd, quiet), shell=True)
-subprocess.call("%s %s grompp -f %s -c filename_solv.gro -p topol.top -o ions.tpr"%(gmx_cmd, quiet, ion_script), shell=True)
+subprocess.call("%s %s grompp -f %s -c filename_solv.gro -p topol.top -o ions.tpr -maxwarn 1"%(gmx_cmd, quiet, ion_script), shell=True)
     
 if neu_charge > 0:
     subprocess.call("echo 'SOL' | %s %s genion -s ions.tpr -o filename_ions.gro -p topol.top -pname NA -nname CL -nn %i"%(gmx_cmd, quiet, neu_charge), shell=True)
@@ -139,7 +139,7 @@ else:
 logger.info("> Minimisation complete. Initialising equilibriation...")
 _ = bs.nvtrun(temp)
 
-subprocess.call("%s %s grompp -f nvt.mdp -c em.gro -p topol.top -o nvt.tpr"%(gmx_cmd, quiet), shell=True)
+subprocess.call("%s %s grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr"%(gmx_cmd, quiet), shell=True)
 
 if n_proc != 1:
     subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -s nvt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
