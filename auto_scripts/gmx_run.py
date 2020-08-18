@@ -31,7 +31,7 @@ parser.add_argument('-dt', metavar="dumptime", default=2500, required=False, hel
 parser.add_argument('-t', metavar="temp", default=310.15, required=False, help='Temperate of simulation (default 310.15K)')
 parser.add_argument('-p', metavar="press", default=1.0, required=False, help='Pressure of simulation (default 1 bar)')
 parser.add_argument('-s', metavar="skip", default=1, required=False, help='How many frames to skip during parsing (default None)')
-parser.add_argument('-np', metavar="no_proc", default=1, required=False, help="Number of CPUs to run in parallel. If one, runs in serial (Default 1)")
+parser.add_argument('-np', metavar="no_proc", default=1, required=False, help="Number of CPUs to run in parallel. If set to 1 or not specified, use GROMACS default behavior (default is 1)")
 parser.add_argument('-gpu', metavar="gpu", default=-1, required=False, help="GPU ID to map to. 0000 (i.e. first registered one) is the default. But if not specified, then it is assumed you're not using a gpu")
 parser.add_argument('-minim', metavar="min_script", default=current_p + "/minim.mdp", required=False, help="Path to minimisation script, default is the minim script in the auto_scripts folder")
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
@@ -116,7 +116,7 @@ neu_charge = int(subprocess.check_output(current_p + "/neutralise.sh", shell=Tru
 # Solvate and neutralise
 subprocess.call("%s %s editconf -f filename.gro -o filename_proc.gro -c -d 1.0 -bt cubic"%(gmx_cmd, quiet), shell=True)
 subprocess.call("%s %s solvate -cp filename_proc.gro -cs spc216.gro -o filename_solv.gro -p topol.top"%(gmx_cmd, quiet), shell=True)
-subprocess.call("%s %s grompp -f %s -c filename_solv.gro -p topol.top -o ions.tpr"%(gmx_cmd, quiet, ion_script), shell=True)
+subprocess.call("%s %s grompp -f %s -c filename_solv.gro -p topol.top -o ions.tpr -maxwarn 1"%(gmx_cmd, quiet, ion_script), shell=True)
     
 if neu_charge > 0:
     subprocess.call("echo 'SOL' | %s %s genion -s ions.tpr -o filename_ions.gro -p topol.top -pname NA -nname CL -nn %i"%(gmx_cmd, quiet, neu_charge), shell=True)
@@ -139,7 +139,7 @@ else:
 logger.info("> Minimisation complete. Initialising equilibriation...")
 _ = bs.nvtrun(temp)
 
-subprocess.call("%s %s grompp -f nvt.mdp -c em.gro -p topol.top -o nvt.tpr"%(gmx_cmd, quiet), shell=True)
+subprocess.call("%s %s grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr"%(gmx_cmd, quiet), shell=True)
 
 if n_proc != 1:
     subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -s nvt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
