@@ -22,7 +22,6 @@ parser.add_argument('-t', metavar="temp", default=310.15, required=False, help='
 parser.add_argument('-p', metavar="press", default=1.0, required=False, help='Pressure simulation was run at (default is 1.0 bar)')
 parser.add_argument('-vox', metavar="vox_in_window", default=3., required=False, help='Number of voxels to include from the surrounding space into the central voxel (default is 3)')
 parser.add_argument('-w', metavar="width", default=1., required=False, help='Width of a voxel (default is 1 Ang., units in ang.)')
-parser.add_argument('-dm', metavar="dip_map", default=1, required=False, help='Whether you want the dipole map printing too (required for postprocessing - default is true). It needs an input of either 0 or 1 (false or true)')
 parser.add_argument('-ac', metavar="ac", default=1, required=False, help='You are converting from an amber forcefield. Needs 0 or 1 - False or True (Default = True)')
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
 parser.add_argument('-eps', metavar="eps_ext", default=54., required=False, help='External Dielectric used in the calculation of the internal, default is 54.')
@@ -38,7 +37,6 @@ temp = float(args["t"])
 press = float(args["p"]) * 1e+5 # convert to Pa
 vox = float(args["vox"])
 width = float(args["w"])
-dm = int(args["dm"])
 eps_ext = float(args["eps"])
 ac = int(args["ac"]) 
 
@@ -69,13 +67,6 @@ else:
     logger.setLevel(logging.INFO)
 
 logger.info(cmd_output)
-
-if dm < 0 or dm > 1:
-    raise Exception("ERROR: Use a 1 or a 0 to indicate if you want a dipole map or not")
-elif dm == 1:
-    dip_map = True
-else:
-    dip_map = False
 
 # Run error checks if time is too short / long
 if time_start >= time_end:
@@ -131,7 +122,7 @@ min_crds = np.ndarray.tolist(np.asarray((buffmaxmin[0] + buff[0], buffmaxmin[2] 
 
 # Build the dipole map
 logger.info("> Grid built, creating a dipole map")
-dipoles  = M.get_dipole_map(orig = orig, pqr = M_pqr, time_start = time_start, time_end = time_end, write_dipole_map = dip_map, vox_in_window = vox, resolution = width, fname = outname + ".tcl")
+dipoles  = M.get_dipole_map(orig = orig, pqr = M_pqr, time_start = time_start, time_end = time_end, write_dipole_map = False, vox_in_window = vox, resolution = width)
 
 # Build the STID map
 logger.info("> Dipole map written, building the STID map...")
@@ -141,4 +132,4 @@ logger.info("> Creating a single PDB structure centered in your maps")
 
 M.write_pdb(outname + '.pdb', conformations=[int((time_start+time_end)/2)])
 
-logger.info("> STID map building complete. Check %s.pdb, %s.dx and %s.tcl for output"%(outname, outname, outname))
+logger.info("> STID map building complete. Check %s.pdb and %s.dx for output and input for docking"%(outname, outname))

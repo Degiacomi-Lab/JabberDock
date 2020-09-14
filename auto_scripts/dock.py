@@ -35,7 +35,6 @@ parser.add_argument('-a', metavar='angle', required=False, default = 180., help=
 parser.add_argument('-n', metavar='name', required=False, default='model_solutions', help="filename for the .dat file with the roto-translations and scores at the end (default is model_solutions)")
 parser.add_argument('-r', metavar='restart', required=False, default=0, help="If this is a restart run (i.e. you're continuing from a point in the docking simulation). The default is 0 (i.e. False). If you are continuing, set -r 1")
 parser.add_argument('-np', metavar='no_processors', required=False, default=1, help="How many processes to use if running in MPI, default is 1, i.e. serial")
-parser.add_argument('-tcl', metavar='dip_map', required=False, default=1, help="Do you want the initial docking position of the tcl dipole map along with its geometric equivilents in the dx and pdb maps. If you want to do any dipole post processing, the answer should be 1 (as is default). The tcl file should have the same name as your STID maps pdb file, e.g. receptor.tcl")
 
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
 args = vars(parser.parse_args())
@@ -50,10 +49,6 @@ times = float(args["m"])
 angle = float(args["a"])
 no_proc = int(args["np"])
 name = str(args["n"])
-if int(args["tcl"]) == 1:
-    tcl = True
-else:
-    tcl = False
 if int(args["r"]) == 1:
     restart = True
 else:
@@ -98,9 +93,9 @@ logger.info("> Setting up input script and defining boundary conditions...")
 boundary = jd.geometry.get_minmax_crd(receptor + '.pdb', fname_times = times, fname_buff = buff)
 
 if restart:
-    _ = bs.powrun(boundary[0], boundary[1], boundary[2], receptor, ligand, iso=iso, dist = dist, log=logfile, angle=angle, no_samples=no_samples, file_name = name, tcl =tcl, restart = True)
+    _ = bs.powrun(boundary[0], boundary[1], boundary[2], receptor, ligand, iso=iso, dist = dist, log=logfile, angle=angle, no_samples=no_samples, file_name = name, restart = True)
 else:
-    _ = bs.powrun(boundary[0], boundary[1], boundary[2], receptor, ligand, iso=iso, dist = dist, log=logfile, angle=angle, no_samples=no_samples, file_name = name, tcl =tcl)    
+    _ = bs.powrun(boundary[0], boundary[1], boundary[2], receptor, ligand, iso=iso, dist = dist, log=logfile, angle=angle, no_samples=no_samples, file_name = name)    
 
 logger.info("> Beginning POW run")
 
@@ -118,5 +113,5 @@ if mpi:
 else:
     subprocess.call("%s/POW.py input_ensemble | tee time_log.dat"%(pow_loc), shell=True)
 
-logger.info("%i ligand models produced by POW in folder models. The data file with details on roto-translations and scores is held in %s.dat.\nThe results are returned unranked, but each model number relates to the corresponding line in the data file.\nAn additional dipole re-ranking procedure can now be invoked, or you can rank the solutions as is.\nNote that the solutions are geometrically oriented relative to the initial_receptor file (i.e. the starting points were moved to the origin)"%(no_samples, name))
+logger.info("%i ligand models produced by POW in folder models. The data file with details on roto-translations and scores is held in %s.dat.\nThe results are returned unranked, but each model number relates to the corresponding line in the data file.\nYou can now rank the solutions into a new file using rank.py.\nNote that the solutions are geometrically oriented relative to the initial_receptor file (i.e. the starting points were moved to the origin)"%(no_samples, name))
 

@@ -26,9 +26,6 @@ class Parser(P):
         # Add in the electron density maps that we need
         self.add('receptor_map','receptor_map','str',"NA")
         self.add('ligand_map','ligand_map','str',"NA")
-        # Add in the dipole map tcl files
-        self.add('receptor_dip', 'receptor_dip', 'str', "None")
-        self.add('ligand_dip', 'ligand_dip', 'str', "None")
         # Cutoff for electron density map & distance lists
         self.add('iso_cutoff','iso_cutoff','float',0.5)
         self.add('dist_cutoff','dist_cutoff','float',1.6)
@@ -91,24 +88,6 @@ class Data:
         self.E1 = bb.Density()
         self.E1._import_dx(params.receptor_map)
 
-        # Import dipole maps to get initial positions (if necessary)
-        if params.receptor_dip != 'None':
-
-            if not os.path.isfile(params.receptor_dip):
-                raise Exception("ERROR: receptor tcl file %s not found!"%params.receptor_dip)            
-                sys.exit(0)
-            if not os.path.isfile(params.ligand_dip):
-                raise Exception("ERROR: ligand tcl file %s not found!"%params.ligand_dip)
-                sys.exit(0)
-            self.D1 = jd.Dipole()
-            self.D1.import_dipole(params.receptor_dip)
-            self.D2 = jd.Dipole()
-            self.D2.import_dipole(params.ligand_dip)
-            dip = True
-
-        else:
-            dip = False
-
         # Build the jabber maps so we save computation time (essentially just the chosen isosurface from dx)
         self.J1 = jd.Jabber(params.receptor_map, params.iso_cutoff)
         self.J2 = jd.Jabber(params.ligand_map, params.iso_cutoff)                       
@@ -123,11 +102,6 @@ class Data:
         jd.geometry.translate_map(self.E2, -trans_M2[0], -trans_M2[1], -trans_M2[2])
         self.J1.translate(-trans_M1)
         self.J2.translate(-trans_M2)
-        if dip:
-            self.D1.translate_dipole(-trans_M1)
-            self.D2.translate_dipole(-trans_M2)
-            self.D1.write_dipole('./models/initial_%s'%(params.receptor_dip))
-            self.D2.write_dipole('./models/initial_%s'%(params.ligand_dip))
 
         self.E1.write_dx('./models/initial_%s'%(params.receptor_map))
         self.E2.write_dx('./models/initial_%s'%(params.ligand_map))
@@ -314,13 +288,6 @@ class Postprocess(PP):
                 R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
                 jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
 
-                Ptest_J = deepcopy(self.data.J2)
-                Ptest_J.rotate(self.COM, R_pdb)
-                Ptest_J.translate(np.array((pos[0], pos[1], pos[2])))
-
-                T = bb.Structure(p=Ptest_J.verts)
-                # Jab model refering to the framework we use to calculate the surface complementarity
-                T.write_pdb("./models/jabmodel_%i.pdb"%(cnt))
                 Ptest.write_dx("./models/model_%i.dx"%(cnt))
         
         

@@ -132,7 +132,7 @@ def nptrun(timestep, no_steps, dump_time, ref_temp, ref_press):
     md_file.close()
     return 0
 
-def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, axis=1, file_name = 'model_solutions', tcl = True, restart=False, ensemble_module="generate_ensemble.py"):
+def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',fname='input_ensemble', no_samples = 300, angle=180., mpi=False, axis=1, file_name = 'model_solutions', restart=False, ensemble_module="generate_ensemble.py"):
     
     # axis refers to limiting the rotational space of protein (needs to be added in docs)
     # ensemble module is the generate ensemble pow script that someone can edit (needs to be added in docs)
@@ -141,9 +141,6 @@ def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',
     ligand_pdb = ligand + '.pdb'
     receptor_dx = receptor + '.dx'
     ligand_dx = ligand + '.dx'
-    if tcl:
-        receptor_dip = receptor + '.tcl'
-        ligand_dip = ligand + '.tcl'
 
     line1 = "optimizer PSO"
     line2 = "module %s/%s"%(current_p, ensemble_module)
@@ -175,18 +172,12 @@ def powrun(x, y, z, receptor, ligand, iso = 0.43, dist = 1.6, log='pow_log.dat',
     line28 = "ligand_map %s"%(ligand_dx)
     line29 = "iso_cutoff %s"%(iso)
     line30 = "dist_cutoff %s"%(dist)
-    if tcl:
-        line32 = "receptor_dip %s"%(receptor_dip)
-        line33 = "ligand_dip %s"%(ligand_dip)
-    else:
-        line32 = "receptor_dip None"
-        line33 = "ligand_dip None"
     if restart:
-        line34 = "restart swarm.restart"
+        line31 = "restart swarm.restart"
     else:
-        line34 = ""
+        line31 = ""
 
-    lines = [line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17, line18, line18_5, line19, line20, line21, line22, line23, line24, line26, line27, line28, line29, line30, line32, line33, line34]
+    lines = [line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17, line18, line18_5, line19, line20, line21, line22, line23, line24, line26, line27, line28, line29, line30, line31]
 
     md_file = open('%s'%(fname), 'w')
 
