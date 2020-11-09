@@ -26,6 +26,9 @@ class Parser(P):
         # Add in the electron density maps that we need
         self.add('receptor_map','receptor_map','str',"NA")
         self.add('ligand_map','ligand_map','str',"NA")
+        # Add in the dipole map tcl files
+        self.add('receptor_dip', 'receptor_dip', 'str', "None")
+        self.add('ligand_dip', 'ligand_dip', 'str', "None")
         # Cutoff for electron density map & distance lists
         self.add('iso_cutoff','iso_cutoff','float',0.5)
         self.add('dist_cutoff','dist_cutoff','float',1.6)
@@ -92,16 +95,9 @@ class Data:
         self.J1 = jd.Jabber(params.receptor_map, params.iso_cutoff)
         self.J2 = jd.Jabber(params.ligand_map, params.iso_cutoff)                       
 
-        # move the structures to the geometric center (so they're overlapping)
+        # The structures are already in the correct positions as that was part of the parsing process
         trans_M1 = deepcopy(self.M1.get_center())
         trans_M2 = deepcopy(self.M2.get_center())
-
-        self.M1.translate(-trans_M1[0], -trans_M1[1], -trans_M1[2])
-        self.M2.translate(-trans_M2[0], -trans_M2[1], -trans_M2[2])
-        jd.geometry.translate_map(self.E1, -trans_M1[0], -trans_M1[1], -trans_M1[2])
-        jd.geometry.translate_map(self.E2, -trans_M2[0], -trans_M2[1], -trans_M2[2])
-        self.J1.translate(-trans_M1)
-        self.J2.translate(-trans_M2)
 
         self.E1.write_dx('./models/initial_%s'%(params.receptor_map))
         self.E2.write_dx('./models/initial_%s'%(params.ligand_map))
@@ -143,7 +139,7 @@ class Space(S):
             print('ERROR: dimensions of min and max boundary conditions are not the same')
             sys.exit(1)
         if (self.low>self.high).any():
-            print('ERROR: a lower boundary condition is greater than a higher one')
+            print('ERROR: a lower boundary condition is greated than a higher one')
             sys.exit(1)
         #define cell size
         self.cell_size=self.high-self.low
@@ -229,7 +225,7 @@ class Postprocess(PP):
             print(">> %s solutions filtered"%len(self.log))
 
             if len(self.log)==0:
-                print(">> no solutions found!!!")
+                print(">> no solution found!!!")
                 return
 
             elif len(self.log) > self.params.samples:
@@ -272,7 +268,7 @@ class Postprocess(PP):
         # save models
         if rank == 0:
 	    #print points
-	    print(">> Saving found models...")
+	    print(">> Creating models of selected samples...")
 
 	    for cnt, pos in enumerate(point_save):
         
@@ -288,6 +284,13 @@ class Postprocess(PP):
                 R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
                 jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
 
+                #Ptest_J = deepcopy(self.data.J2)
+                #Ptest_J.rotate(self.COM, R_pdb)
+                #Ptest_J.translate(np.array((pos[0], pos[1], pos[2])))
+
+                #T = bb.Structure(p=Ptest_J.verts)
+                # Jab model refering to the framework we use to calculate the surface complementarity
+                #T.write_pdb("./models/jabmodel_%i.pdb"%(cnt))
                 Ptest.write_dx("./models/model_%i.dx"%(cnt))
         
         

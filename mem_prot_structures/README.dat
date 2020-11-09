@@ -1,0 +1,34 @@
+# The following contains the list of PDB_chain structures used to generate predictions and associated targets
+# This refers to data currently under review at the Journal of Chemical Information and Modeling
+# Please refer to Table S1 to see the sequency identity and minimum RMSD vs bound state
+# The target folder contains the bound PDB_chain, the input the unbound starting points
+# R refers to Receptor, L to ligand
+#
+# Structures collated from:
+# 1) memdock (https://doi.org/10.1093/bioinformatics/btw184)
+# 2) HADDOCK (https://doi.org/10.1016/j.jmb.2018.11.005) 
+# 3) DOCK/PIPER (http://doi.wiley.com/10.1002/prot.24934)
+# And downloaded from https://opm.phar.umich.edu/
+# LSPR, 09/11/2020
+
+#Bound_R Bound_L Unbound_R Unbound_L
+ 1E12_A  1E12_C   3A7K_A    3A7K_A
+ 1M0L_A  1M0L_C   1C8S_A    1C8S_A
+ 1M56_A  1M56_C   3OMI_A    1QLE_C
+ 1Q90_B  1Q90_F   2ZT9_A    2ZT9_A
+ 1ZOY_C  1ZOY_D   1YQ3_C    1YQ3_D
+ 2QJY_A  2QJY_D   1ZRT_C    1ZRT_C
+ 3CHX_B  3CHX_J   1YEW_B    1YEW_B
+ 3KLY_A  3KLY_B   3KCU_A    3KCU_A
+ 3OE0_A  3OE0_B   3ODU_A    3ODU_A
+ 3RVY_A  3RVY_B   3RW0_A    3RW0_A
+ 4DKL_A  4DKL_B   4EA3_A    4EA3_A
+ 2K9J_B  2K9J_A   2RMZ_A    2K1A_A
+ 2KS1_A  2KS1_B   2N2A_A    2M0B_A
+ 1BL8_A  1BL8_B   1K4D_C    1K4D_C
+ 1H2S_C  1H2S_D   1GU8_A    2F95_B
+ 2NRF_A  2NRF_B   2IC8_A    2IC8_A
+ 2WIE_A  2WIE_B   3V3C_A    3V3C_A
+ 1EHK_A  1EHK_B   3S33_A    3S33_B
+ 3KCU_A  3KCU_B   3Q7K_A    3Q7K_A
+ 2VT4_A  2VT4_B   2Y00_A    2Y00_B
