@@ -1,16 +1,20 @@
-# The following contains the list of PDB_chain structures used to generate predictions and associated targets
-# This refers to data currently under review at the Journal of Chemical Information and Modeling
-# Please refer to Table S1 to see the sequency identity and minimum RMSD vs bound state
-# The target folder contains the bound PDB_chain, the input the unbound starting points
-# R refers to Receptor, L to ligand
+# The following contains the list of PDB_chain structures used to generate predictions and associated targets for the JD membrane docking paper
+# The input folder contains the original folder, with the PDBs used for generation of STID maps etc. (which are then used for docking)
+# input also contains the mutated folder, which holds the crystal homologs mutated with Modeller to match the target structures
+# It is these structures that have their minimum RMSD w.r.t. the target reported in Table S1 
+# Note that mutation was not applicable for all cases (as not all were homologs), but we have provided all structures (including repeats) for completeness
+#
+# Please refer to Excel spreadsheet for sequence identity and minimum RMSD vs bound stat
+# The target folder contains the bound PDB_chain in their known docked pose
 #
 # Structures collated from:
 # 1) memdock (https://doi.org/10.1093/bioinformatics/btw184)
 # 2) HADDOCK (https://doi.org/10.1016/j.jmb.2018.11.005) 
 # 3) DOCK/PIPER (http://doi.wiley.com/10.1002/prot.24934)
 # And downloaded from https://opm.phar.umich.edu/
-# LSPR, 09/11/2020
+# LSPR, 09/11/2020 (updated with mutated folder 11/01/2021)
 
+# R refers to Receptor, L to ligand
 #Bound_R Bound_L Unbound_R Unbound_L
  1E12_A  1E12_C   3A7K_A    3A7K_A
  1M0L_A  1M0L_C   1C8S_A    1C8S_A
