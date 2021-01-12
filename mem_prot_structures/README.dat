@@ -1,0 +1,38 @@
+# The following contains the list of PDB_chain structures used to generate predictions and associated targets for the JD membrane docking paper
+# The input folder contains the original folder, with the PDBs used for generation of STID maps etc. (which are then used for docking)
+# input also contains the mutated folder, which holds the crystal homologs mutated with Modeller to match the target structures
+# It is these structures that have their minimum RMSD w.r.t. the target reported in Table S1 
+# Note that mutation was not applicable for all cases (as not all were homologs), but we have provided all structures (including repeats) for completeness
+#
+# Please refer to Excel spreadsheet for sequence identity and minimum RMSD vs bound stat
+# The target folder contains the bound PDB_chain in their known docked pose
+#
+# Structures collated from:
+# 1) memdock (https://doi.org/10.1093/bioinformatics/btw184)
+# 2) HADDOCK (https://doi.org/10.1016/j.jmb.2018.11.005) 
+# 3) DOCK/PIPER (http://doi.wiley.com/10.1002/prot.24934)
+# And downloaded from https://opm.phar.umich.edu/
+# LSPR, 09/11/2020 (updated with mutated folder 11/01/2021)
+
+# R refers to Receptor, L to ligand
+#Bound_R Bound_L Unbound_R Unbound_L
+ 1E12_A  1E12_C   3A7K_A    3A7K_A
+ 1M0L_A  1M0L_C   1C8S_A    1C8S_A
+ 1M56_A  1M56_C   3OMI_A    1QLE_C
+ 1Q90_B  1Q90_F   2ZT9_A    2ZT9_A
+ 1ZOY_C  1ZOY_D   1YQ3_C    1YQ3_D
+ 2QJY_A  2QJY_D   1ZRT_C    1ZRT_C
+ 3CHX_B  3CHX_J   1YEW_B    1YEW_B
+ 3KLY_A  3KLY_B   3KCU_A    3KCU_A
+ 3OE0_A  3OE0_B   3ODU_A    3ODU_A
+ 3RVY_A  3RVY_B   3RW0_A    3RW0_A
+ 4DKL_A  4DKL_B   4EA3_A    4EA3_A
+ 2K9J_B  2K9J_A   2RMZ_A    2K1A_A
+ 2KS1_A  2KS1_B   2N2A_A    2M0B_A
+ 1BL8_A  1BL8_B   1K4D_C    1K4D_C
+ 1H2S_C  1H2S_D   1GU8_A    2F95_B
+ 2NRF_A  2NRF_B   2IC8_A    2IC8_A
+ 2WIE_A  2WIE_B   3V3C_A    3V3C_A
+ 1EHK_A  1EHK_B   3S33_A    3S33_B
+ 3KCU_A  3KCU_B   3Q7K_A    3Q7K_A
+ 2VT4_A  2VT4_B   2Y00_A    2Y00_B
