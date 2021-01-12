@@ -122,7 +122,7 @@ cpdef rotate_pdb(pdb, float angle = 0., float axisx = 0., float axisy = 0., floa
         R = [[t*x*x + c, t*x*y - z*s, t*x*z + y*s], [t*x*y + z*s, 	t*y*y + c , t*y*z - x*s], [t*x*z - y*s, t*y*z + x*s, t*z*z + c]]
 
     # Finally, we multiply our coordinate system matrix by our rotation matrix - rotating the pdb structure
-    vals = np.matmul(pdb.get_xyz(), R)
+    vals = np.matmul(pdb.coordinates[0], R)
     pdb.set_xyz(vals)
  
     # Move back to original position
@@ -195,7 +195,7 @@ cpdef rotate_map(dx, np.ndarray COM = np.array((0., 0., 0.)), float angle = 0., 
     dx.properties['origin'] = origin_rot
 
     # Reshift the origin back to its origional position
-    dx = translate_map(dx, COM[0], COM[1], COM[2])   
+    translate_map(dx, COM[0], COM[1], COM[2])   
  
     # Return the rotation matrix
     return np.asarray(R, dtype=float)

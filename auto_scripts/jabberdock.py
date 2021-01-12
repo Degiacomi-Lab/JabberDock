@@ -94,11 +94,9 @@ logger.info("> Maps complete, beginning docking procedure...")
 
 subprocess.call('python %s/dock.py -ir %s_sim_map -il %s_sim_map -np %i'%(current_p, recep_name, lig_name, n_proc), shell=True)
 
-logger.info("> Docking complete, now re-ranking using the dipoles...")
 subprocess.call("cd models/", shell=True)
-subprocess.call('python %s/dipole_rerank.py -ir models/initial_%s_sim_map.tcl -il models/initial_%s_sim_map.tcl -ilpdb models/initial_%s_sim_map.pdb'%(current_p, recep_name, lig_name, lig_name), shell=True)
 
-logger.info("> Reranking complete, just producing a final file with the scores...")
+logger.info("> Docking complete, just producing a final file with the scores...")
 
 subprocess.call("python %s/rank.py"%(current_p), shell=True)
 
