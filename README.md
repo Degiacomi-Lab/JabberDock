@@ -96,8 +96,8 @@ The associated publication is currently under review at The Journal of Chemical 
 Please see the manual in the home directory for more details on how to use JabberDock. Email the author if you have any questions.
 
 When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
+When using the transmembrane protein docking engine, please cite both the original work, and: https://pubs.acs.org/doi/10.1021/acs.jcim.0c01315
 
 ## Contact ##
 
-This is a work in progress, and there are bound to be bugs, particularly with the variety of machines. If you have any issues, please email the author at l.s.rudden@durham.ac.uk.
-(Final note): I am approaching the end of my PhD (31/01/2021 thesis submission). If you like this work or any of my other publications, please get in touch with me at the above email address.
+This is a work in progress, and there are bound to be bugs. If you have any issues, please email the author at lucas.powell-rudden@epfl.ch.
