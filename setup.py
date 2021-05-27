@@ -22,7 +22,7 @@ class InstallCommand(build_ext):
 
         try:
             for root, dirnames, filenames in os.walk("build"):
-                print dirnames
+                print(dirnames)
                 for filename in filenames:
                     extension = filename.split(".")[-1]
                     if extension in ["pyd", "so"]:
