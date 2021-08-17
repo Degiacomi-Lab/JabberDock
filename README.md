@@ -100,4 +100,4 @@ When using the transmembrane protein docking engine, please cite both the origin
 
 ## Contact ##
 
-If you have any issues, please email lucas.powell-rudden@epfl.ch.
+If you have any issues, please email lucas.rudden@epfl.ch.
