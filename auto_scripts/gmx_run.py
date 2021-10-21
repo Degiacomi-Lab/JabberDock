@@ -54,11 +54,11 @@ ion_script = str(current_p + '/ions.mdp')
 
 # If variables exist:
 if n_proc != 1:
-    gmx_cmd = '/usr/local/gromacs/bin/gmx_mpi'
+    gmx_cmd = 'gmx_mpi'
 elif n_proc < 1:
     raise Exception("ERROR: The number of processors you have requested is less than 1!")
 else:
-    gmx_cmd = '/usr/local/gromacs/bin/gmx'
+    gmx_cmd = 'gmx'
 
 if n_proc > 1 and ntomp < 2:
     raise Exception("ERROR: You have requested multiple MPI threads but not enough openMP threads.")
