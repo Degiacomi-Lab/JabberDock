@@ -36,8 +36,8 @@ if rank == 0:
 # checking if input is correct and has 3 arguments
 if len(sys.argv)!=2:
     if rank == 0:
-	print("\nERROR: parameters are not what I expected!")
-	print("USAGE: ./parse.py module input_file [logfile]\n")
+    print("\nERROR: parameters are not what I expected!")
+    print("USAGE: ./parse.py module input_file [logfile]\n")
     sys.exit(1)
 
 #get input file
