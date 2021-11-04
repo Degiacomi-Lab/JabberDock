@@ -98,7 +98,7 @@ class PSO:
 
     def launch(self,params,space,fitness):
 
-	#load parameterization, space, and fitness function information
+    #load parameterization, space, and fitness function information
         self.params=params
         self.space=space
         self.space.cell_size=self.space.high-self.space.low
@@ -108,7 +108,7 @@ class PSO:
         if self.params.dimensions==-1:
             self.params.dimensions=len(self.space.low)
 
-	#master node checks for optimizer-specific keywords consistency
+    #master node checks for optimizer-specific keywords consistency
         if rank ==0:
             self.check_keywords()
 

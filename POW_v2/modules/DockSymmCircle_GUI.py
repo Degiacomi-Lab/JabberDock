@@ -1574,16 +1574,16 @@ class MainWindow(wx.Frame):
         self.init()
         
         params=module.Parser() #read user defined variables
-	params.add_standard() #add default variables
-	params.set_default_values() #set default values to all defined variables
-	params.parse(infile) #parse input file
-	
-	#protocol panel
+    params.add_standard() #add default variables
+    params.set_default_values() #set default values to all defined variables
+    params.parse(infile) #parse input file
+    
+    #protocol panel
         self.S.editrep.SetValue(str(params.repeat))
         self.S.editsteps.SetValue(str(params.max_steps))
         self.S.editpart.SetValue(str(params.n_particles))
 
-	#protocol advanced settings
+    #protocol advanced settings
         self.S.editneighsize=str(params.neigh_size)
         self.S.editneigh=str(params.neigh_type)
         self.S.editinertiamax=float(params.inertia_max)
@@ -1591,7 +1591,7 @@ class MainWindow(wx.Frame):
         self.S.editpersonal=float(params.cp)
         self.S.editglobal=float(params.cn)
 
-	#constraint panel
+    #constraint panel
         #insert data from target values list
         for x in xrange(0,len(params.target),1):
             self.C.lc.InsertStringItem(x, str(x+1))
@@ -1605,46 +1605,46 @@ class MainWindow(wx.Frame):
         self.C.editfilter.SetValue(str(params.accept))
         #self.add('detectClash','detect_clash','str',"on")
 
-	#input panel
-	self.I.setdegree.SetValue(str(params.degree))
-	self.I.editassemblystyle.SetValue(str(params.style))
-	self.I.setstructure.SetValue(str(params.pdb_file_name))
-	self.I.settop.SetValue(str(params.topology))
-	self.I.setproj.SetValue(str(params.proj_file))
-	self.I.setratio.SetValue(str(params.ratio))
-       	#self.add('align','align','str',"no")
-	#self.add('trajectory','trajectory','str',"NA")
-	#self.add('trajSelection','trajselection','str',"NA")
+    #input panel
+    self.I.setdegree.SetValue(str(params.degree))
+    self.I.editassemblystyle.SetValue(str(params.style))
+    self.I.setstructure.SetValue(str(params.pdb_file_name))
+    self.I.settop.SetValue(str(params.topology))
+    self.I.setproj.SetValue(str(params.proj_file))
+    self.I.setratio.SetValue(str(params.ratio))
+           #self.add('align','align','str',"no")
+    #self.add('trajectory','trajectory','str',"NA")
+    #self.add('trajSelection','trajselection','str',"NA")
 
-	print str(params.pdb_file_name)
+    print str(params.pdb_file_name)
 
-	#boundary panel
-	if len(params.low_input)==4:
-		self.B.minx.SetValue(str(params.low_input[0]))
-		self.B.miny.SetValue(str(params.low_input[1]))
-		self.B.minz.SetValue(str(params.low_input[2]))
-		self.B.minr.SetValue(str(params.low_input[3]))
-	if len(params.high_input)==4:
-		self.B.maxx.SetValue(str(params.high_input[0]))
-		self.B.maxy.SetValue(str(params.high_input[1]))
-		self.B.maxz.SetValue(str(params.high_input[2]))
-		self.B.maxr.SetValue(str(params.high_input[3]))
+    #boundary panel
+    if len(params.low_input)==4:
+        self.B.minx.SetValue(str(params.low_input[0]))
+        self.B.miny.SetValue(str(params.low_input[1]))
+        self.B.minz.SetValue(str(params.low_input[2]))
+        self.B.minr.SetValue(str(params.low_input[3]))
+    if len(params.high_input)==4:
+        self.B.maxx.SetValue(str(params.high_input[0]))
+        self.B.maxy.SetValue(str(params.high_input[1]))
+        self.B.maxz.SetValue(str(params.high_input[2]))
+        self.B.maxr.SetValue(str(params.high_input[3]))
 
-	#receptor data
+    #receptor data
         if params.receptor!="NA":
-		self.R.usereceptor.SetValue(True)
-		self.R.setstructure.SetValue(str(params.receptor))
-	if len(params.low_input_rec)==4:
-		self.R.minx.SetValue(str(params.low_input_rec[0]))
-		self.R.miny.SetValue(str(params.low_input_rec[1]))
-		self.R.minz.SetValue(str(params.low_input_rec[2]))
-		self.R.minr.SetValue(str(params.low_input_rec[3]))
-	if len(params.high_input_rec)==4:
-		self.R.maxx.SetValue(str(params.high_input_rec[0]))
-		self.R.maxy.SetValue(str(params.high_input_rec[1]))
-		self.R.maxz.SetValue(str(params.high_input_rec[2]))
-		self.R.maxr.SetValue(str(params.high_input_rec[3]))
-	#self.add('z_padding','pad','int',10)
+        self.R.usereceptor.SetValue(True)
+        self.R.setstructure.SetValue(str(params.receptor))
+    if len(params.low_input_rec)==4:
+        self.R.minx.SetValue(str(params.low_input_rec[0]))
+        self.R.miny.SetValue(str(params.low_input_rec[1]))
+        self.R.minz.SetValue(str(params.low_input_rec[2]))
+        self.R.minr.SetValue(str(params.low_input_rec[3]))
+    if len(params.high_input_rec)==4:
+        self.R.maxx.SetValue(str(params.high_input_rec[0]))
+        self.R.maxy.SetValue(str(params.high_input_rec[1]))
+        self.R.maxz.SetValue(str(params.high_input_rec[2]))
+        self.R.maxr.SetValue(str(params.high_input_rec[3]))
+    #self.add('z_padding','pad','int',10)
 
 
     def OnLaunch(self,event):
@@ -2353,7 +2353,7 @@ class ConstraintPanel(wx.Panel):
         self.lblmix = wx.StaticText(self, label="mix coeff.:")
         self.editmix = wx.TextCtrl(self, value="0.2", size=(40,-1))
 
-	#log filtering criteria
+    #log filtering criteria
         self.lblfilter = wx.StaticText(self, label="filtering thresh.:")
         self.editfilter = wx.TextCtrl(self, value="0", size=(40,-1))
 

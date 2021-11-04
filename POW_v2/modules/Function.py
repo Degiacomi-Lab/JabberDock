@@ -56,7 +56,7 @@ class Space(S):
         self.boundary_type=np.zeros(len(params.low_input))
         if params.boundary_type!="NA":
             for i in xrange(0,len(params.low_input),1):
-             	self.boundary_type[i]=params.boundary_type[i]
+                 self.boundary_type[i]=params.boundary_type[i]
 
 class Fitness:
     def __init__(self,data,params):
