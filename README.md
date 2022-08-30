@@ -48,7 +48,7 @@ Please read the full installation instructions in the manual.
 
 Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
 Please move the Biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath.
-The full Biobox package is available here: https://github.com/degiacom/biobox.
+The full Biobox package is available here: https://github.com/Degiacomi-Lab/biobox.
 
 ## POW installation ##
 The original version of POW can be found on the EPFL website:
