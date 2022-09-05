@@ -45,11 +45,10 @@ mv JabberDock-master JabberDock
 Please read the full installation instructions in the manual.
 
 ## Biobox installation ##
-Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
-Please move the biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath
-There is a readme file in the biobox folder containing instructions on requirements and installation instructions.
 
-This is an unpubished PDB manipulation module, and therefore is unavaliable elsewhere. We are aiming to publish the full module at some point in the future.
+Shipped with this version of JabberDock is a heavily stripped version of biobox containing the functions JabberDock requires.
+Please move the Biobox folder into whatever directory you like (e.g. your home), just make sure it's in your pythonpath.
+The full Biobox package is available here: https://github.com/Degiacomi-Lab/biobox.
 
 ## POW installation ##
 The original version of POW can be found on the EPFL website:
@@ -95,8 +94,8 @@ The associated publication is currently under review at The Journal of Chemical 
 
 Please see the manual in the home directory for more details on how to use JabberDock. Email the author if you have any questions.
 
-When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
-When using the transmembrane protein docking engine, please cite both the original work, and: https://pubs.acs.org/doi/10.1021/acs.jcim.0c01315
+* When using JabberDock in your work, please cite the following publication: https://pubs.acs.org/doi/10.1021/acs.jctc.9b00474
+* When using the transmembrane protein docking engine, please cite both the original work, and: https://pubs.acs.org/doi/10.1021/acs.jcim.0c01315
 
 ## Contact ##
 
