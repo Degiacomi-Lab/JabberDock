@@ -99,12 +99,12 @@ class Data:
         trans_M1 = deepcopy(self.M1.get_center())
         trans_M2 = deepcopy(self.M2.get_center())
 
-        self.E1.write_dx('./models/initial_%s'%(params.receptor_map))
-        self.E2.write_dx('./models/initial_%s'%(params.ligand_map))
-        self.M1.write_pdb('./models/initial_%s'%(params.receptor))
-        self.M2.write_pdb('./models/initial_%s'%(params.ligand))
-        self.J1.write_jabber('./models/initial_receptormap.pdb')
-        self.J2.write_jabber('./models/initial_ligandmap.pdb')
+        self.E1.write_dx('./models/additional_files/initial_%s'%(params.receptor_map))
+        self.E2.write_dx('./models/additional_files/initial_%s'%(params.ligand_map))
+        self.M1.write_pdb('./models/additional_files/initial_%s'%(params.receptor))
+        self.M2.write_pdb('./models/additional_files/initial_%s'%(params.ligand))
+        #self.J1.write_jabber('./models/initial_receptormap.pdb')
+        #self.J2.write_jabber('./models/initial_ligandmap.pdb')
         ###############################################
 
 class Space(S):
@@ -253,7 +253,7 @@ class Postprocess(PP):
             
             point_save[:, 7] *= -1 # convert back so increasing score is better
             # Print the relevent cluster points
-            np.savetxt('./models/%s.dat'%(self.params.file_name), point_save)
+            np.savetxt('./models/additional_files/%s.dat'%(self.params.file_name), point_save)
             
         else:
             points = []
@@ -277,12 +277,13 @@ class Postprocess(PP):
                 R_pdb = jd.geometry.rotate_pdb(Ptest_pdb, pos[3], pos[4], pos[5], pos[6])
                 Ptest_pdb.translate(x = pos[0],y = pos[1],z = pos[2])
                       
-                Ptest_pdb.write_pdb("./models/model_%i.pdb"%(cnt))
+                C_model = self.M1 + Ptest_pdb
+                C_model.write_pdb("./models/model_%i.pdb"%(cnt))
 
                 # Now we do the density map
-                Ptest = deepcopy(self.data.E2)
-                R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
-                jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
+                #Ptest = deepcopy(self.data.E2)
+                #R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
+                #jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
 
                 #Ptest_J = deepcopy(self.data.J2)
                 #Ptest_J.rotate(self.COM, R_pdb)
@@ -291,7 +292,7 @@ class Postprocess(PP):
                 #T = bb.Structure(p=Ptest_J.verts)
                 # Jab model refering to the framework we use to calculate the surface complementarity
                 #T.write_pdb("./models/jabmodel_%i.pdb"%(cnt))
-                Ptest.write_dx("./models/model_%i.dx"%(cnt))
+                #Ptest.write_dx("./models/model_%i.dx"%(cnt))
         
         
         comm.Barrier()

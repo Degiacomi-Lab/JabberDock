@@ -17,8 +17,8 @@ from scipy.stats import rankdata
 # Need number of samples, input style
 
 parser = argparse.ArgumentParser(description='Parse input parameters')
-parser.add_argument('-d', metavar='data_file', required=False, default='model_solutions.dat', help="Data file containing the scores. This can be either the raw scores output from dock or from dipole_rerank")
-parser.add_argument('-o', metavar='output_file', required=False, default='ranked_scores.dat', help="Output re-ranked scores. Note that this will contain an additional column to your input, the original line number, as these correspond to the model numbers for the output pdb files")
+parser.add_argument('-d', metavar='data_file', required=False, default='models/additional_files/model_solutions.dat', help="Data file containing the scores. This can be either the raw scores output from dock or from dipole_rerank")
+parser.add_argument('-o', metavar='output_file', required=False, default='models/ranked_scores.dat', help="Output re-ranked scores. Note that this will contain an additional column to your input, the original line number, as these correspond to the model numbers for the output pdb files")
 parser.add_argument('-v', action="store_true", help='Verbose (I want updates!)')
 args = vars(parser.parse_args())
 
@@ -105,9 +105,10 @@ elif dat_shape == 2:
 else:
     raise Exception("ERROR: File is not dipole re-ranked or dock output file. It has %i columns when it should have 1 or 9"%(dat_shape))
 
-logger.info("> Ranking complete, outputting ranked data to %s. The numbers in the last column indicate the corresponding model numbers in the dx and pdb files output by dock."%(out_file))
+logger.info("> Ranking complete, outputting ranked data to %s. The numbers in the last column indicate the corresponding model numbers of the complex PDB file output by dock."%(out_file))
 
 f = open(out_file, "w")
+f.write("SCORE  MODEL_NO")
 for line in ranked_data:
     f.write("%.5f  %i\n"%(line[0], int(line[1])))
 

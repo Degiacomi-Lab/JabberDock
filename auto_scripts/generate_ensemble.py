@@ -103,12 +103,12 @@ class Data:
         self.J1.translate(-trans_M1)
         self.J2.translate(-trans_M2)
 
-        self.E1.write_dx('./models/initial_%s'%(params.receptor_map))
-        self.E2.write_dx('./models/initial_%s'%(params.ligand_map))
-        self.M1.write_pdb('./models/initial_%s'%(params.receptor))
-        self.M2.write_pdb('./models/initial_%s'%(params.ligand))
-        self.J1.write_jabber('./models/initial_receptormap.pdb')
-        self.J2.write_jabber('./models/initial_ligandmap.pdb')
+        self.E1.write_dx('./models/additional_files/initial_%s'%(params.receptor_map))
+        self.E2.write_dx('./models/additional_files/initial_%s'%(params.ligand_map))
+        self.M1.write_pdb('./models/additional_files/initial_%s'%(params.receptor))
+        self.M2.write_pdb('./models/additional_files/initial_%s'%(params.ligand))
+        #self.J1.write_jabber('./models/additional_files/initial_receptormap.pdb')
+        #self.J2.write_jabber('./models/additional_files/initial_ligandmap.pdb')
         ###############################################
 
 class Space(S):
@@ -257,7 +257,7 @@ class Postprocess(PP):
             
             point_save[:, 7] *= -1 # convert back so increasing score is better
             # Print the relevent cluster points
-            np.savetxt('./models/%s.dat'%(self.params.file_name), point_save)
+            np.savetxt('./models/additional_files/%s.dat'%(self.params.file_name), point_save)
             
         else:
             points = []
@@ -277,18 +277,18 @@ class Postprocess(PP):
 	    for cnt, pos in enumerate(point_save):
         
                 Ptest_pdb = deepcopy(self.data.M2)
-                        
+
                 R_pdb = jd.geometry.rotate_pdb(Ptest_pdb, pos[3], pos[4], pos[5], pos[6])
                 Ptest_pdb.translate(x = pos[0],y = pos[1],z = pos[2])
-                      
-                Ptest_pdb.write_pdb("./models/model_%i.pdb"%(cnt))
+                
+                C_model = self.M1 + Ptest_pdb # now write to file as whole complex (rather than just ligand)
+                C_model.write_pdb("./models/model_%i.pdb"%(cnt))
 
                 # Now we do the density map
-                Ptest = deepcopy(self.data.E2)
-                R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
-                jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
+                #Ptest = deepcopy(self.data.E2)
+                #R = jd.geometry.rotate_map(Ptest, COM = self.COM, R = R_pdb)
+                #jd.geometry.translate_map(Ptest, pos[0], pos[1], pos[2])
 
-                Ptest.write_dx("./models/model_%i.dx"%(cnt))
-        
-        
+                #Ptest.write_dx("./models/model_%i.dx"%(cnt))
+                
         comm.Barrier()

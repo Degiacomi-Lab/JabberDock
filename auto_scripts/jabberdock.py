@@ -94,7 +94,7 @@ logger.info("> Maps complete, beginning docking procedure...")
 
 subprocess.call('python %s/dock.py -ir %s_sim_map -il %s_sim_map -np %i'%(current_p, recep_name, lig_name, n_proc), shell=True)
 
-subprocess.call("cd models/", shell=True)
+#subprocess.call("cd models/", shell=True)
 
 logger.info("> Docking complete, just producing a final file with the scores...")
 
