@@ -58,7 +58,7 @@ class Jabber(object):
         step_matrix = [spacing, spacing, spacing]
 
         # Define the coordinate points of the verties, the triangular faces (index of verts), the normal direction at each vertex, and the maximum value in the local triangle region
-        verts, self.faces, self.norm, self.values = measure.marching_cubes_lewiner(volume, level = cutoff, spacing = step_matrix)
+        verts, self.faces, self.norm, self.values = measure.marching_cubes(volume, level = cutoff, spacing = step_matrix)
 
         self.verts = verts + origin
 

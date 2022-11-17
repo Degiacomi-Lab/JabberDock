@@ -103,10 +103,12 @@ logger.info("> Beginning POW run")
 if not restart:
     if not os.path.isdir('models'):
         subprocess.call('mkdir models', shell=True)
+        os.mkdir("./models/additional_files")
     else:
         logger.info('> Found a models folder, renaming to models_old_%d%d_%d_%d_%d'%(now.hour, now.minute, now.day,now.month,now.year))
         subprocess.call('mv models models_old_%d%d_%d_%d_%d'%(now.hour, now.minute, now.day,now.month,now.year), shell=True)
         subprocess.call('mkdir models', shell=True)
+        os.mkdir("./models/additional_files")
 
 if mpi:
     subprocess.call("mpirun -np %i %s/POW.py input_ensemble | tee time_log.dat"%(no_proc, pow_loc), shell=True)

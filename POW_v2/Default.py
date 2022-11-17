@@ -30,9 +30,9 @@ class Parser: # this is imported in the file
         self.add('output','output_file','str',"log.txt")
         self.add('dimensions','dimensions','int',-1)
         self.add('fitnessFile','fit','str',"NA")
-        self.add('boundaryMin','low_input','array float',"NA")
-        self.add('boundaryMax','high_input','array float',"NA")
-        self.add('boundaryType','boundary_type','array str',np.array(["NA"]))
+        self.add('boundaryMin','low_input','array float', np.array(["NA"]))
+        self.add('boundaryMax','high_input','array float', np.array(["NA"]))
+        self.add('boundaryType','boundary_type','array str', np.array(["NA"]))
         self.add('filter_threshold','accept','float',0)
 
     #insert a new keyword entry in parameters dictionary Xx enter all the tuples above in the self.parameter xX
@@ -114,13 +114,13 @@ class Parser: # this is imported in the file
             print('ERROR: %s dimensions given, but %s needed!'%(len(self.boundary_type),len(self.low_input)))
             sys.exit(1)
 
-        if self.high_input!="NA" and np.any(self.low_input>self.high_input):
+        if self.high_input[0] !="NA" and np.any(self.low_input>self.high_input):
             print('ERROR: a lower boundary condition is greated than a higher one')
             print(self.low_input)
             print(self.high_input)
             sys.exit(1)
 
-        if self.dimensions>-1 and self.high_input!="NA":
+        if self.dimensions>-1 and self.high_input[0]!="NA":
             print("ERROR: either dimensions or boundaryMin and boundaryMax variables should be used to defind space size!")
             sys.exit(1)
 

@@ -54,7 +54,7 @@ ion_script = str(current_p + '/ions.mdp')
 
 # If variables exist:
 if n_proc != 1:
-    gmx_cmd = 'gmx_mpi'
+    gmx_cmd = 'gmx'
 elif n_proc < 1:
     raise Exception("ERROR: The number of processors you have requested is less than 1!")
 else:
@@ -117,7 +117,7 @@ neu_charge = int(subprocess.check_output(current_p + "/neutralise.sh", shell=Tru
 subprocess.call("%s %s editconf -f filename.gro -o filename_proc.gro -c -d 1.0 -bt cubic"%(gmx_cmd, quiet), shell=True)
 subprocess.call("%s %s solvate -cp filename_proc.gro -cs spc216.gro -o filename_solv.gro -p topol.top"%(gmx_cmd, quiet), shell=True)
 subprocess.call("%s %s grompp -f %s -c filename_solv.gro -p topol.top -o ions.tpr -maxwarn 1"%(gmx_cmd, quiet, ion_script), shell=True)
-    
+
 if neu_charge > 0:
     subprocess.call("echo 'SOL' | %s %s genion -s ions.tpr -o filename_ions.gro -p topol.top -pname NA -nname CL -nn %i"%(gmx_cmd, quiet, neu_charge), shell=True)
 elif neu_charge < 0:
@@ -130,10 +130,13 @@ logger.info("> Beginning energy minimisation")
 
 subprocess.call("%s %s grompp -f %s -c filename_ions.gro -p topol.top -o em.tpr"%(gmx_cmd, quiet, min_script), shell=True)
 
+
+print("###%s %s %s####"%(gmx_cmd, n_proc, ntomp))
 if n_proc != 1:
-    subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -deffnm em"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    #subprocess.call("mpirun -np %i gmx %s mdrun -ntomp %i %s -deffnm em"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    subprocess.call("gmx mdrun -ntomp %i -deffnm em"%(n_proc), shell=True)
 else:
-    subprocess.call("%s %s mdrun -deffnm em"%(gmx_cmd, quiet), shell=True)
+    subprocess.call("%s %s mdrun -deffnm em -ntomp %s"%(gmx_cmd, quiet, ntomp), shell=True)
 
 # Begin Equib
 logger.info("> Minimisation complete. Initialising equilibriation...")
@@ -142,8 +145,10 @@ _ = bs.nvtrun(temp)
 subprocess.call("%s %s grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr"%(gmx_cmd, quiet), shell=True)
 
 if n_proc != 1:
-    subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -s nvt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    #subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -s nvt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    subprocess.call("gmx mdrun -ntomp %i -s nvt.tpr"%(n_proc), shell =True)
 else:
+    print("%s %s mdrun -s nvt.tpr"%(gmx_cmd, quiet))
     subprocess.call("%s %s mdrun -s nvt.tpr"%(gmx_cmd, quiet), shell=True)
 
 subprocess.call("mv confout.gro nvt.gro", shell=True)
@@ -155,7 +160,8 @@ _ = bs.nptrun(timestep, no_steps, dump_time, temp, press)
 subprocess.call("%s %s grompp -f npt.mdp -c nvt.gro -p topol.top -o npt.tpr"%(gmx_cmd, quiet), shell=True)
 
 if n_proc != 1:
-    subprocess.call("mpirun -np %i gmx_mpi %s mdrun -ntomp %i %s -s npt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    #subprocess.call("mpirun -np %i gmx %s mdrun -ntomp %i %s -s npt.tpr"%(n_proc, quiet, ntomp, gpu_cmd), shell=True)
+    subprocess.call("gmx mdrun -ntomp %i -s npt.tpr"%(n_proc), shell = True)
 else:
     subprocess.call("%s %s mdrun -s npt.tpr"%(gmx_cmd, quiet), shell=True)
 
